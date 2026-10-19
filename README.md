@@ -46,3 +46,4 @@ resume.pdf
 - **Preview image and icons**: `python tools/make_social_images.py` regenerates `assets/og-image.jpg`, `favicon.ico` and `assets/icons/` from your photo, name and job. Run it after replacing `assets/zayed.jpg`.
 - **`sitemap.xml`**: update `<lastmod>` when the site changes meaningfully.
 - **`robots.txt`** allows everything and points to the sitemap. **`404.html`** is the "page not found" page GitHub Pages shows.
+- **`c74a4f181222a5d21da2a090f758788d.txt`** is the IndexNow key: it lets Bing (and other IndexNow search engines) accept "this page changed" notifications from this site. Leave it in place.
