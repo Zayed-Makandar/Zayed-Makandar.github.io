@@ -1,0 +1,98 @@
+{
+  "_readme": "All the words on the site live here. Wrap words in *asterisks* to colour them with the accent, and use \\n for a line break. The page <title> and link-preview tags are in index.html (link previews can't read this file).",
+
+  "name": "Zayed Makandar",
+
+  "hero": {
+    "tagline": "AI/ML Engineer.\nI make models run on *real hardware*.",
+    "readout": "Live on your hardware"
+  },
+
+  "about": {
+    "label": "About",
+    "photo": "assets/zayed.jpg",
+    "lines": [
+      "I'm an AI/ML engineer in Karnataka, India.",
+      "I build vision, speech and language systems, then make them fast enough for the hardware people actually have.",
+      "A CPU-only server. One shared GPU. A kiosk in a noisy lobby."
+    ]
+  },
+
+  "work": {
+    "label": "Work",
+    "items": [
+      { "role": "AI/ML Engineer", "company": "Abhyudyaya Techno Solutions", "dates": "Jun 2025 – Present" }
+    ]
+  },
+
+  "skills": {
+    "label": "Skills",
+    "items": ["Python", "PyTorch", "LLMs", "RAG", "Computer Vision", "ONNX", "vLLM", "FastAPI", "Docker"]
+  },
+
+  "projects": {
+    "label": "Projects",
+    "items": [
+      {
+        "title": "DocIntel",
+        "line": "Turns PDFs, scans and Office files into clean Markdown, in 90+ languages.",
+        "description": "A GPU microservice built around a 5B vision-language OCR model, with a switchable Transformers/vLLM backend. Tuning batching, prefix caching and shared-GPU memory took a 10-page document from 95 s to 13.3 s.",
+        "tags": ["FastAPI", "vLLM", "Transformers", "Docker"],
+        "image": "assets/projects/docintel.svg",
+        "imageAlt": "Illustration of a document page being converted into structured Markdown",
+        "links": [{ "label": "GitHub", "url": "" }]
+      },
+      {
+        "title": "Edge-AI Health Monitor",
+        "line": "Offline health screening with sensors, a webcam and ten INT8 models on a CPU.",
+        "description": "A multi-pathway PyTorch model (1D-CNN, wavelet 2D-CNN, LSTM, self-attention) feeds five risk modules, all quantised to INT8 ONNX so they run offline. A webcam module reads contactless heart rate (rPPG), blink rate and stress alongside IoT vital-sign sensors.",
+        "tags": ["PyTorch", "ONNX Runtime", "OpenCV", "MediaPipe"],
+        "image": "assets/projects/health-monitor.svg",
+        "imageAlt": "Illustration of an ECG trace on a grid",
+        "links": [{ "label": "GitHub", "url": "" }]
+      },
+      {
+        "title": "VoiceDesk",
+        "line": "A voice receptionist that runs entirely on one local machine.",
+        "description": "Local speech-to-text, RAG over an editable ChromaDB knowledge base, a local LLM and streamed speech replies. A wake-word fuzzy matcher and correction layer, built from real lobby logs, keeps it working in a noisy room, with automatic offline TTS fallback.",
+        "tags": ["faster-whisper", "ChromaDB", "Ollama", "FastAPI"],
+        "image": "assets/projects/voicedesk.svg",
+        "imageAlt": "Illustration of an audio waveform next to a speech bubble",
+        "links": [{ "label": "GitHub", "url": "" }]
+      }
+    ]
+  },
+
+  "gallery": {
+    "label": "Gallery",
+    "hint": "Drag or scroll →",
+    "empty": "No photos yet. Add images to ./photos, then run: python tools/optimize_photos.py"
+  },
+
+  "contact": {
+    "label": "Contact",
+    "heading": "Got a model that needs to run somewhere *real*?",
+    "email": "zayedmakandar03@gmail.com",
+    "links": [
+      { "label": "LinkedIn", "url": "https://www.linkedin.com/in/zayed-makandar-642536422/" },
+      { "label": "Resume", "url": "resume.pdf" },
+      { "label": "GitHub", "url": "" }
+    ]
+  },
+
+  "footer": "© {year} Zayed Makandar",
+
+  "ui": {
+    "at": "at",
+    "threads": "threads",
+    "photo": "Photo",
+    "copy": "Copy",
+    "copied": "Copied",
+    "backToTop": "Back to top ↑",
+    "themeToDark": "Switch to dark mode",
+    "themeToLight": "Switch to light mode",
+    "close": "Close",
+    "previous": "Previous photo",
+    "next": "Next photo"
+  }
+}

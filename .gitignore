@@ -1,0 +1,16 @@
+# Original photos stay on your machine: they're large, and phone photos
+# carry GPS location in their EXIF data. Only the WebP versions get published.
+photos/*
+!photos/.gitkeep
+
+# Private notes and source files: never publish
+PROJECTS_ASSESSMENT.md
+Zayed_Resume.pdf
+Linkedin_Zayed.jpg
+
+# Editor / OS clutter
+.vscode/
+__pycache__/
+.DS_Store
+Thumbs.db
+desktop.ini

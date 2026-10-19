@@ -1,0 +1,4 @@
+{
+  "_note": "Edit 'caption' for each photo and reorder entries to reorder the gallery. Run  python tools/optimize_photos.py  after adding or removing files in ./photos. id, w and h are filled in by the script.",
+  "photos": []
+}
