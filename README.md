@@ -36,6 +36,6 @@ photos.json         gallery captions (generated, then hand-edited)
 css/style.css       styles; palette at the top
 js/main.js          rendering, animation, gallery, lightbox
 tools/optimize_photos.py
-assets/             images (zayed.jpg, projects/, gallery/)
+assets/             images (zayed.jpg, projects/, gallery/) and fonts/ (self-hosted, SIL OFL)
 resume.pdf
 ```

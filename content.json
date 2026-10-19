@@ -111,6 +111,7 @@
   "gallery": {
     "label": "Gallery",
     "hint": "Drag or scroll →",
+    "hintTouch": "Swipe →",
     "empty": "No photos yet. Add images to ./photos, then run: python tools/optimize_photos.py"
   },
 

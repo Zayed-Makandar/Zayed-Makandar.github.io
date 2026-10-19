@@ -298,7 +298,8 @@
     }
 
     section.hidden = false;
-    slot('gallery-hint').textContent = content.gallery?.hint ?? '';
+    const touch = matchMedia('(hover: none)').matches;
+    slot('gallery-hint').textContent = (touch && content.gallery?.hintTouch) || content.gallery?.hint || '';
     slot('gallery').innerHTML = photos.map((photo, i) => `
       <li>
         <button class="gallery__btn" type="button" data-index="${i}" aria-label="${esc(photo.caption || `${ui('photo')} ${i + 1}`)}">
@@ -412,7 +413,9 @@
     addEventListener('resize', checkFit);
 
     // If a keyboard user tabs into the footer early, jump to the end so they can see where they are.
-    footer.addEventListener('focusin', () => {
+    // (Keyboard focus only: tapping a footer link on a phone must not jump the page.)
+    footer.addEventListener('focusin', (e) => {
+      if (!e.target.matches(':focus-visible')) return;
       const end = document.documentElement.scrollHeight - innerHeight;
       if (scrollY >= end - 2) return;
       if (lenis) lenis.scrollTo(end, { immediate: true });
@@ -469,17 +472,13 @@
   function initCopy() {
     const button = $('.copy-btn');
     const email = content.contact?.email;
-    if (!email || !navigator.clipboard) {
+    if (!email) {
       button.remove();
       return;
     }
     let timer;
     button.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(email);
-      } catch {
-        return;
-      }
+      if (!(await copyText(email))) return;
       button.textContent = ui('copied');
       button.classList.add('is-done');
       clearTimeout(timer);
@@ -488,6 +487,26 @@
         button.classList.remove('is-done');
       }, 1800);
     });
+  }
+
+  // Modern clipboard API first; some phone in-app browsers (Instagram, LinkedIn...) block it,
+  // so fall back to the older select-and-copy method.
+  async function copyText(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch { /* fall through */ }
+    const field = document.createElement('textarea');
+    field.value = text;
+    field.setAttribute('readonly', '');
+    field.style.cssText = 'position:fixed;top:0;left:0;opacity:0;font-size:16px';
+    document.body.append(field);
+    field.select();
+    field.setSelectionRange(0, text.length);
+    let copied = false;
+    try { copied = document.execCommand('copy'); } catch { /* not supported */ }
+    field.remove();
+    return copied;
   }
 
 

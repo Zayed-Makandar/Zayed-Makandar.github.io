@@ -9,6 +9,61 @@
 }
 
 
+/* ---------- Fonts (self-hosted, so every phone, tablet and in-app browser gets the
+   same files; Google Fonts sends some browsers older versions that render wider) ---------- */
+
+@font-face {
+  font-family: "Bricolage Grotesque";
+  font-style: normal;
+  font-weight: 200 800;
+  font-stretch: 75% 100%;
+  font-display: swap;
+  src: url("../assets/fonts/bricolage-grotesque-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Bricolage Grotesque";
+  font-style: normal;
+  font-weight: 200 800;
+  font-stretch: 75% 100%;
+  font-display: swap;
+  src: url("../assets/fonts/bricolage-grotesque-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Geist Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/geist-mono-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Geist Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/geist-mono-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Geist Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../assets/fonts/geist-mono-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Geist Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../assets/fonts/geist-mono-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+
 /* ---------- Tokens (derived from the palette) ---------- */
 
 :root {
@@ -189,7 +244,9 @@ em { font-style: normal; color: var(--accent); }
   padding-bottom: 2px;
   transition: background-size .45s var(--ease-out);
 }
-.nav a:hover { background-size: 100% 1px; }
+@media (hover: hover) {
+  .nav a:hover { background-size: 100% 1px; }
+}
 
 .theme-toggle {
   display: grid;
@@ -204,7 +261,9 @@ em { font-style: normal; color: var(--accent); }
   cursor: pointer;
   transition: border-color .3s;
 }
-.theme-toggle:hover { border-color: var(--fg); }
+@media (hover: hover) {
+  .theme-toggle:hover { border-color: var(--fg); }
+}
 .theme-toggle svg {
   width: 1.2rem;
   transition: transform .7s var(--ease-in-out);
@@ -226,12 +285,13 @@ em { font-style: normal; color: var(--accent); }
 /* ---------- Hero ---------- */
 
 .hero {
-  --name-size: clamp(3.5rem, min(21vw, 25svh), 18.5rem);
+  --name-size: clamp(3.5rem, min(20vw, 25svh), 18.5rem); /* phones/tablets: leaves room even if a fallback font is used */
   --sticker-size: clamp(7rem, 34vw, 13rem);
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  min-height: 100vh;
   min-height: 100svh;
   padding-top: calc(var(--header-h) + 1.5rem);
   padding-bottom: clamp(2rem, 5vw, 4rem);
@@ -256,6 +316,7 @@ em { font-style: normal; color: var(--accent); }
 
 .hero__name {
   margin-left: -.045em; /* optical alignment of the Z */
+  font-variation-settings: "opsz" 96; /* tight poster cut on every screen (laptops already get it) */
   font-size: var(--name-size);
   font-weight: 800;
   line-height: .84;
@@ -409,19 +470,23 @@ em { font-style: normal; color: var(--accent); }
   text-decoration: none;
   transition: background-color .3s, border-color .3s, color .3s;
 }
-.btn:hover {
-  background: var(--fg);
-  color: var(--bg);
+@media (hover: hover) {
+  .btn:hover {
+    background: var(--fg);
+    color: var(--bg);
+  }
 }
 .btn--primary {
   border-color: var(--accent);
   background: var(--accent);
   color: var(--on-accent);
 }
-.btn--primary:hover {
-  border-color: var(--fg);
-  background: var(--fg);
-  color: var(--bg);
+@media (hover: hover) {
+  .btn--primary:hover {
+    border-color: var(--fg);
+    background: var(--fg);
+    color: var(--bg);
+  }
 }
 
 
@@ -730,7 +795,9 @@ em { font-style: normal; color: var(--accent); }
   color: var(--accent-text);
   text-decoration: none;
 }
-.project__links a:hover { text-decoration: underline; }
+@media (hover: hover) {
+  .project__links a:hover { text-decoration: underline; }
+}
 
 .project__media img {
   width: 100%;
@@ -808,6 +875,7 @@ em { font-style: normal; color: var(--accent); }
   background: var(--ink);
   color: var(--paper);
 }
+.lightbox { touch-action: pinch-zoom; overscroll-behavior: contain; }
 .lightbox[open] {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
@@ -828,7 +896,7 @@ em { font-style: normal; color: var(--accent); }
   place-items: center;
   min-height: 0;
   padding-inline: var(--gutter);
-  touch-action: pan-y pinch-zoom;
+  touch-action: pinch-zoom;
 }
 .lightbox__img {
   width: auto;
@@ -871,10 +939,12 @@ em { font-style: normal; color: var(--accent); }
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-.lightbox__btn:hover {
-  border-color: var(--accent);
-  background: var(--accent);
-  color: var(--ink);
+@media (hover: hover) {
+  .lightbox__btn:hover {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--ink);
+  }
 }
 .lightbox__btn[hidden] { visibility: hidden; display: grid; }
 
@@ -907,7 +977,9 @@ em { font-style: normal; color: var(--accent); }
   text-underline-offset: .14em;
   transition: color .3s;
 }
-.contact__email:hover { color: var(--accent); }
+@media (hover: hover) {
+  .contact__email:hover { color: var(--accent); }
+}
 
 .copy-btn {
   padding: .5em 1em;
@@ -917,7 +989,9 @@ em { font-style: normal; color: var(--accent); }
   cursor: pointer;
   transition: border-color .3s, background-color .3s, color .3s;
 }
-.copy-btn:hover { border-color: var(--fg); }
+@media (hover: hover) {
+  .copy-btn:hover { border-color: var(--fg); }
+}
 .copy-btn.is-done {
   border-color: var(--accent);
   background: var(--accent);
@@ -937,7 +1011,9 @@ em { font-style: normal; color: var(--accent); }
   padding-bottom: 3px;
   transition: background-size .45s var(--ease-out);
 }
-.contact__links a:hover { background-size: 100% 1px; }
+@media (hover: hover) {
+  .contact__links a:hover { background-size: 100% 1px; }
+}
 
 
 /* ---------- Footer ---------- */
@@ -985,10 +1061,14 @@ main {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* Pinned only when it fits on screen; main.js adds .is-tall when it doesn't. */
-.site-footer:not(.is-tall) {
-  position: sticky;
-  bottom: 0;
+/* Pinned only on mouse/trackpad devices, and only when it fits on screen (main.js adds
+   .is-tall when it doesn't). On touch screens the browser bars resize the viewport while
+   scrolling, so there the footer simply scrolls into view. */
+@media (hover: hover) and (pointer: fine) {
+  .site-footer:not(.is-tall) {
+    position: sticky;
+    bottom: 0;
+  }
 }
 
 .footer__inner {
@@ -1048,9 +1128,11 @@ main {
   padding-bottom: 2px;
   transition: background-size .45s var(--ease-out), color .3s;
 }
-.footer__list a:hover {
-  color: var(--accent);
-  background-size: 100% 1px;
+@media (hover: hover) {
+  .footer__list a:hover {
+    color: var(--accent);
+    background-size: 100% 1px;
+  }
 }
 
 .footer__bottom {
@@ -1064,7 +1146,9 @@ main {
   color: color-mix(in oklab, var(--paper) 62%, transparent);
 }
 .footer__bottom a { text-decoration: none; }
-.footer__bottom a:hover { color: var(--paper); }
+@media (hover: hover) {
+  .footer__bottom a:hover { color: var(--paper); }
+}
 
 /* The giant name: sized by main.js to fill the width, cropped by the bottom edge. */
 .footer__wordmark {
@@ -1246,6 +1330,48 @@ html:not(.has-cursor) .cursor { display: none; }
   html.has-cursor,
   html.has-cursor * { cursor: auto !important; }
   .cursor { display: none; }
+}
+
+
+/* ---------- Phones and tablets ---------- */
+
+/* No grey flash when tapping links and buttons. */
+a, button, summary { -webkit-tap-highlight-color: transparent; }
+
+/* Bigger tap targets on touch screens (invisible padding, same look). */
+@media (pointer: coarse) {
+  .nav a { padding-block: .9rem; }
+  .contact__links a,
+  .footer__bottom a { display: inline-block; padding-block: .45rem; }
+  .footer__list { gap: 0; }
+  .footer__list a { display: inline-block; padding-block: .3rem; }
+}
+
+/* Phones: the email must fit on one line instead of breaking mid-word. */
+@media (max-width: 40em) {
+  .contact__email { font-size: clamp(1rem, 5.4vw, 1.5rem); }
+}
+
+/* Tablets held upright: keep the photo, name and buttons together instead of leaving a
+   half-empty screen between the photo (top corner) and the name (bottom). */
+@media (min-width: 40em) and (max-width: 63.99em) and (orientation: portrait) {
+  .hero {
+    min-height: 0;
+    padding-top: calc(var(--header-h) + 3rem + var(--sticker-size));
+  }
+}
+
+/* Fallbacks for older phone browsers (iOS 15 and earlier). Modern browsers skip these. */
+@supports not (overflow: clip) {
+  body, main { overflow-x: hidden; }
+}
+@supports not (height: 1svh) {
+  .hero { --name-size: clamp(3.5rem, min(20vw, 25vh), 18.5rem); }
+}
+@supports not (color: color-mix(in oklab, red, blue)) {
+  :root { --muted: #6E6A63; --line: #D6D1C7; --accent-text: #B8380F; }
+  :root[data-theme="dark"] { --muted: #A39E95; --line: #3A3835; --accent-text: var(--accent); }
+  .site-footer { background: linear-gradient(180deg, var(--ink) 30%, #6B2A17 62%, var(--accent) 100%); }
 }
 
 
