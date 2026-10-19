@@ -49,28 +49,32 @@
     "label": "Skills",
     "groups": [
       {
-        "title": "Programming",
-        "items": ["Python", "SQL", "Git", "Linux"]
+        "title": "Languages & Tools",
+        "items": ["Python", "SQL", "C++", "Bash", "PostgreSQL", "Git", "Linux", "Docker", "Jupyter"]
       },
       {
-        "title": "GenAI & LLMs",
-        "items": ["LLMs", "RAG", "Vision-language models", "Hugging Face Transformers", "LangGraph", "Ollama", "ChromaDB", "RAGAS", "Whisper", "spaCy", "NLTK"]
+        "title": "Generative AI & LLMs",
+        "items": ["LLMs", "Retrieval-Augmented Generation (RAG)", "Prompt Engineering", "Embeddings", "Vector DBs (ChromaDB, FAISS)", "Hugging Face", "VLMs", "Fine-Tuning (LoRA / QLoRA)"]
       },
       {
-        "title": "AI / ML",
-        "items": ["PyTorch", "scikit-learn", "NumPy", "Pandas", "CNNs", "RNN / LSTM / GRU", "Transformers & attention", "Autoencoders & GANs", "Classical ML", "Feature engineering", "Model evaluation"]
+        "title": "Agentic AI",
+        "items": ["AI Agents", "Tool / Function Calling", "Multi-Agent Orchestration", "LangChain", "LangGraph", "Model Context Protocol (MCP)", "LLM Evaluation (RAGAS)"]
+      },
+      {
+        "title": "Machine Learning & Deep Learning",
+        "items": ["ML Algorithms", "Deep Learning", "Neural Network Architectures", "Transformers", "PyTorch", "scikit-learn", "NumPy", "Pandas", "Feature Engineering", "Model Evaluation"]
       },
       {
         "title": "Computer Vision",
-        "items": ["OpenCV", "MediaPipe", "InsightFace", "YOLO (Ultralytics)", "VLM-based OCR", "rPPG"]
+        "items": ["OpenCV", "MediaPipe", "Object Detection (YOLO)", "Image & Video Processing", "OCR"]
       },
       {
         "title": "Model Optimisation",
-        "items": ["ONNX Runtime", "TensorRT", "INT8 / INT4 quantisation", "vLLM", "OpenVINO", "llama.cpp", "CUDA"]
+        "items": ["Quantisation", "ONNX Runtime", "OpenVINO", "TensorRT", "vLLM", "llama.cpp", "CUDA"]
       },
       {
-        "title": "Deployment & MLOps",
-        "items": ["FastAPI", "Docker", "PostgreSQL", "MLflow", "GitHub Actions"]
+        "title": "MLOps & Cloud",
+        "items": ["FastAPI", "REST APIs", "Microservices", "CI/CD (GitHub Actions)", "MLflow", "Azure"]
       }
     ]
   },
@@ -85,7 +89,7 @@
         "tags": ["FastAPI", "vLLM", "Transformers", "Docker"],
         "image": "assets/projects/docintel.svg",
         "imageAlt": "Illustration of a document page being converted into structured Markdown",
-        "links": [{ "label": "GitHub", "url": "" }]
+        "links": [{ "label": "GitHub", "url": "https://github.com/Zayed-Makandar/DocIntel" }]
       },
       {
         "title": "Edge-AI Health Monitor",
@@ -94,7 +98,7 @@
         "tags": ["PyTorch", "ONNX Runtime", "OpenCV", "MediaPipe"],
         "image": "assets/projects/health-monitor.svg",
         "imageAlt": "Illustration of an ECG trace on a grid",
-        "links": [{ "label": "GitHub", "url": "" }]
+        "links": [{ "label": "GitHub", "url": "https://github.com/Zayed-Makandar/Edge-AI-Health-Monitor" }]
       },
       {
         "title": "VoiceDesk",
@@ -103,7 +107,7 @@
         "tags": ["faster-whisper", "ChromaDB", "Ollama", "FastAPI"],
         "image": "assets/projects/voicedesk.svg",
         "imageAlt": "Illustration of an audio waveform next to a speech bubble",
-        "links": [{ "label": "GitHub", "url": "" }]
+        "links": [{ "label": "GitHub", "url": "https://github.com/Zayed-Makandar/VoiceDesk" }]
       }
     ]
   },
