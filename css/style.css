@@ -270,8 +270,18 @@ em { font-style: normal; color: var(--accent); }
 }
 [data-theme="dark"] .theme-toggle svg { transform: rotate(180deg); }
 
+/* Phones: all links stay in the bar. Slightly smaller, tighter text, spread evenly up to the
+   theme button, so all five fit even on a 320px-wide screen. */
 @media (max-width: 40em) {
-  .nav a:not(.nav__keep) { display: none; }
+  .site-header__inner { gap: .75rem; }
+  .nav {
+    flex: 1;
+    justify-content: space-between;
+    gap: .375rem;
+    margin-right: 0;
+    font-size: clamp(.625rem, 3.2vw, .75rem);
+    letter-spacing: .02em;
+  }
 }
 
 /* Theme switch: circular reveal (View Transitions API, where supported) */
