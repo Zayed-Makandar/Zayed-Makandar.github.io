@@ -1,0 +1,5 @@
+# Everything on this site may be crawled.
+User-agent: *
+Allow: /
+
+Sitemap: https://zayedmakandar.com/sitemap.xml

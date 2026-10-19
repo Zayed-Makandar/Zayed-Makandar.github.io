@@ -333,6 +333,10 @@ em { font-style: normal; color: var(--accent); }
   letter-spacing: -.055em;
 }
 .hero__word { display: block; }
+/* index.html carries plain fallback text for crawlers without JavaScript; hide it until main.js
+   has rendered the real (animated) version, so visitors never see it flash. */
+html.js:not(.is-rendered) .hero__name,
+html.js:not(.is-rendered) .hero__tagline { visibility: hidden; }
 .hero__name .w { --mask-top: .12em; --mask-bottom: .22em; }
 
 .hero__tagline {
@@ -1137,6 +1141,15 @@ main {
   background: linear-gradient(var(--accent), var(--accent)) 0 100% / 0 1px no-repeat;
   padding-bottom: 2px;
   transition: background-size .45s var(--ease-out), color .3s;
+}
+.footer__handle {
+  display: block;
+  margin-top: .1rem;
+  font-family: var(--font-mono);
+  font-size: .7rem;
+  font-weight: 400;
+  letter-spacing: .02em;
+  color: color-mix(in oklab, var(--paper) 55%, transparent);
 }
 @media (hover: hover) {
   .footer__list a:hover {

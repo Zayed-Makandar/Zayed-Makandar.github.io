@@ -175,6 +175,7 @@
       .join('');
 
     renderFooter();
+    root.classList.add('is-rendered');
   }
 
   function renderHero() {
@@ -191,7 +192,7 @@
     if (hero.photo) {
       const sticker = slot('sticker');
       sticker.hidden = false;
-      sticker.innerHTML = `<span class="sticker__face"><img src="${esc(hero.photo)}" alt="" width="200" height="200" decoding="async">${hero.badge ? photoBadge(hero.badge) : ''}</span>${BURST}${HAND}`;
+      sticker.innerHTML = `<span class="sticker__face"><img src="${esc(hero.photo)}" alt="${esc(content.name)}" width="200" height="200" decoding="async">${hero.badge ? photoBadge(hero.badge) : ''}</span>${BURST}${HAND}`;
     }
 
     slot('hero-buttons').innerHTML = (hero.buttons || [])
@@ -220,7 +221,8 @@
     ].filter((link) => link.url);
     slot('footer-links').innerHTML = links.map((link) => {
       const external = !link.url.startsWith('mailto:');
-      return `<li><a href="${esc(link.url)}"${external ? ' target="_blank" rel="noopener"' : ''}>${esc(link.label)}${external ? ' ↗' : ''}</a></li>`;
+      const handle = link.handle ? `<small class="footer__handle">${esc(link.handle)}</small>` : '';
+      return `<li><a href="${esc(link.url)}"${external ? ' target="_blank" rel="noopener me"' : ''}>${esc(link.label)}${external ? ' ↗' : ''}${handle}</a></li>`;
     }).join('');
 
     slot('copyright').textContent = String(footer.copyright || '').replace('{year}', new Date().getFullYear());

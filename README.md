@@ -39,3 +39,10 @@ tools/optimize_photos.py
 assets/             images (zayed.jpg, projects/, gallery/) and fonts/ (self-hosted, SIL OFL)
 resume.pdf
 ```
+
+## Search engines & link previews
+
+- **Title, description, preview image, structured data** live in the `<head>` of `index.html`, not in `content.json` (search engines and LinkedIn/WhatsApp previews read them directly). If you change your name, job, location or profile links, update them there too, including the `application/ld+json` block.
+- **Preview image and icons**: `python tools/make_social_images.py` regenerates `assets/og-image.jpg`, `favicon.ico` and `assets/icons/` from your photo, name and job. Run it after replacing `assets/zayed.jpg`.
+- **`sitemap.xml`**: update `<lastmod>` when the site changes meaningfully.
+- **`robots.txt`** allows everything and points to the sitemap. **`404.html`** is the "page not found" page GitHub Pages shows.

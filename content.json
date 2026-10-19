@@ -17,7 +17,7 @@
   "about": {
     "label": "About",
     "lines": [
-      "I'm an AI/ML engineer in Karnataka, India.",
+      "I'm an AI/ML engineer based in Hubli, Karnataka, India.",
       "I build intelligent systems that see, listen and understand language, then make them fast enough for the hardware people actually have.",
       "A CPU-only server. One shared GPU. A kiosk in a noisy lobby.",
       "When a system isn't fast or intelligent enough, I dig in: read the research, test the options, and keep what the benchmarks prove.",
@@ -122,14 +122,14 @@
     "links": [
       { "label": "LinkedIn", "url": "https://www.linkedin.com/in/zayed-makandar-642536422/" },
       { "label": "Resume", "url": "resume.pdf" },
-      { "label": "GitHub", "url": "https://github.com/Zayed-Makandar" },
-      { "label": "Instagram", "url": "https://www.instagram.com/zayedmakandar03/" }
+      { "label": "GitHub", "url": "https://github.com/Zayed-Makandar", "handle": "@Zayed-Makandar" },
+      { "label": "Instagram", "url": "https://www.instagram.com/zayedmakandar03/", "handle": "@zayedmakandar03" }
 
     ]
   },
 
   "footer": {
-    "location": "Karnataka, India",
+    "location": "Hubli, Karnataka, India",
     "timeLabel": "Local time",
     "timezone": "Asia/Kolkata",
     "timezoneLabel": "IST",

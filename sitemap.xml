@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Update <lastmod> when the site changes meaningfully. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://zayedmakandar.com/</loc>
+    <lastmod>2026-10-19</lastmod>
+    <image:image>
+      <image:loc>https://zayedmakandar.com/assets/zayed.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://zayedmakandar.com/assets/og-image.jpg</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://zayedmakandar.com/resume.pdf</loc>
+    <lastmod>2026-10-19</lastmod>
+  </url>
+</urlset>

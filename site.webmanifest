@@ -1,0 +1,13 @@
+{
+  "name": "Zayed Makandar · AI/ML Engineer",
+  "short_name": "Zayed",
+  "description": "Portfolio of Zayed Makandar, AI/ML engineer in Hubli, Karnataka, India.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#F3EFE6",
+  "theme_color": "#151412",
+  "icons": [
+    { "src": "/assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
