@@ -5,6 +5,7 @@
 
   "hero": {
     "status": "Open to AI/ML roles",
+    "badge": "#OPENTOWORK",
     "tagline": "AI/ML Engineer.\nI build vision, speech and LLM systems that hold up in the real world.",
     "photo": "assets/zayed.jpg",
     "buttons": [
@@ -126,11 +127,20 @@
     ]
   },
 
-  "footer": "© {year} Zayed Makandar",
+  "footer": {
+    "location": "Karnataka, India",
+    "timeLabel": "Local time",
+    "timezone": "Asia/Kolkata",
+    "timezoneLabel": "IST",
+    "sitemapLabel": "Sitemap",
+    "elsewhereLabel": "Elsewhere",
+    "copyright": "© {year} Zayed Makandar"
+  },
 
   "ui": {
     "at": "at",
     "photo": "Photo",
+    "email": "Email",
     "copy": "Copy",
     "copied": "Copied",
     "backToTop": "Back to top ↑",
@@ -138,6 +148,10 @@
     "themeToLight": "Switch to light mode",
     "close": "Close",
     "previous": "Previous photo",
-    "next": "Next photo"
+    "next": "Next photo",
+    "cursorView": "View",
+    "cursorDrag": "Drag",
+    "cursorOpen": "Open",
+    "cursorClose": "Close"
   }
 }

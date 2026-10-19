@@ -63,7 +63,7 @@
 
   <main id="main">
     <section class="hero wrap" id="top">
-      <p class="status" data-slot="status" hidden></p>
+      <p class="sr-only" data-slot="status"></p>
       <div class="hero__title">
         <h1 class="hero__name" data-slot="name"></h1>
         <span class="sticker" data-slot="sticker" aria-hidden="true" hidden></span>
@@ -130,9 +130,38 @@
     </section>
   </main>
 
-  <footer class="site-footer wrap">
-    <span data-slot="footer"></span>
-    <a href="#top" data-text="ui.backToTop"></a>
+  <footer class="site-footer">
+    <div class="footer__inner wrap">
+      <div class="footer__top">
+        <div class="footer__intro">
+          <p class="footer__status" data-slot="footer-status" hidden></p>
+          <p class="footer__meta">
+            <span data-text="footer.location"></span><br>
+            <span data-text="footer.timeLabel"></span> <span class="footer__clock" data-slot="clock"></span>
+          </p>
+        </div>
+        <nav class="footer__col" aria-labelledby="footer-sitemap">
+          <h2 class="footer__label" id="footer-sitemap" data-text="footer.sitemapLabel"></h2>
+          <ul class="footer__list">
+            <li><a href="#work" data-text="work.label"></a></li>
+            <li><a href="#skills" data-text="skills.label"></a></li>
+            <li><a href="#projects" data-text="projects.label"></a></li>
+            <li data-gallery-link><a href="#gallery" data-text="gallery.label"></a></li>
+            <li><a href="#contact" data-text="contact.label"></a></li>
+          </ul>
+        </nav>
+        <div class="footer__col">
+          <h2 class="footer__label" id="footer-elsewhere" data-text="footer.elsewhereLabel"></h2>
+          <ul class="footer__list" data-slot="footer-links" aria-labelledby="footer-elsewhere"></ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span data-slot="copyright"></span>
+        <a href="#top" data-text="ui.backToTop"></a>
+      </div>
+    </div>
+    <!-- Giant name across the bottom; decorative, so hidden from screen readers. -->
+    <p class="footer__wordmark" aria-hidden="true"><span class="footer__wordmark-inner" data-slot="wordmark"></span></p>
   </footer>
 
   <dialog class="lightbox">

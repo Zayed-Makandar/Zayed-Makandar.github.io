@@ -15,6 +15,7 @@
 
   let content = {};
   let lenis = null;
+  let cursorEl = null;
 
   const $ = (sel, ctx = document) => ctx.querySelector(sel);
   const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
@@ -31,8 +32,9 @@
 
   // Cartoon glove that slaps the photo sticker on. Drawn twice: a thick ink pass, then a
   // cream fill on top, which leaves one clean outline around the whole hand.
-  const HAND = `<span class="hand"><svg viewBox="0 0 200 250" aria-hidden="true">
-    <defs><g id="hand-glove">
+  // (The custom cursor reuses the same drawing over the photo, with its own id.)
+  const glove = (id, className = '') => `<svg class="${className}" viewBox="0 0 200 250" aria-hidden="true">
+    <defs><g id="${id}">
       <rect x="47" y="34" width="30" height="100" rx="15" transform="rotate(-7 62 125)"/>
       <rect x="81" y="20" width="30" height="110" rx="15"/>
       <rect x="115" y="28" width="30" height="102" rx="15" transform="rotate(5 130 125)"/>
@@ -41,10 +43,11 @@
       <rect x="44" y="96" width="128" height="112" rx="48"/>
       <rect x="52" y="196" width="112" height="48" rx="13"/>
     </g></defs>
-    <use href="#hand-glove" class="hand__outline"/>
-    <use href="#hand-glove" class="hand__fill"/>
+    <use href="#${id}" class="hand__outline"/>
+    <use href="#${id}" class="hand__fill"/>
     <path class="hand__lines" d="M84 148v30M108 144v34M132 148v30M58 213h100"/>
-  </svg></span>`;
+  </svg>`;
+  const HAND = `<span class="hand">${glove('hand-glove')}</span>`;
 
   // Comic "impact" lines that flash around the sticker when it lands.
   const BURST = `<span class="burst"><svg viewBox="-80 -80 160 160" aria-hidden="true">${
@@ -77,18 +80,21 @@
     initHeader();
     initProjects();
     initCopy();
+    initFooter();
     if (photos.length) initGallery(photos);
 
     if (motion) {
       gsap.registerPlugin(ScrollTrigger);
       initSmoothScroll();
+      initCursor();
       const intro = prepareHero();
       prepareReveals();
       await fontsReady();
       intro.play();
-      ScrollTrigger.refresh();
     }
+    fitWordmark();
     initMarquee();
+    if (motion) ScrollTrigger.refresh();
   }
 
   function loadJSON(url) {
@@ -168,17 +174,14 @@
       .map((link) => `<li><a href="${esc(link.url)}" target="_blank" rel="noopener">${esc(link.label)} ↗</a></li>`)
       .join('');
 
-    slot('footer').textContent = String(content.footer || '').replace('{year}', new Date().getFullYear());
+    renderFooter();
   }
 
   function renderHero() {
     const hero = content.hero || {};
 
-    if (hero.status) {
-      const status = slot('status');
-      status.hidden = false;
-      status.innerHTML = `<span class="status__dot" aria-hidden="true"></span>${esc(hero.status)}`;
-    }
+    // Shown visually as the #OPENTOWORK frame on the photo; this copy is for screen readers.
+    slot('status').textContent = hero.status || '';
 
     slot('name').innerHTML = String(content.name || '')
       .split(/\s+/)
@@ -188,7 +191,7 @@
     if (hero.photo) {
       const sticker = slot('sticker');
       sticker.hidden = false;
-      sticker.innerHTML = `<span class="sticker__face"><img src="${esc(hero.photo)}" alt="" width="200" height="200" decoding="async"></span>${BURST}${HAND}`;
+      sticker.innerHTML = `<span class="sticker__face"><img src="${esc(hero.photo)}" alt="" width="200" height="200" decoding="async">${hero.badge ? photoBadge(hero.badge) : ''}</span>${BURST}${HAND}`;
     }
 
     slot('hero-buttons').innerHTML = (hero.buttons || [])
@@ -198,6 +201,50 @@
         return `<a class="btn${i === 0 ? ' btn--primary' : ''}" href="${esc(button.url)}"${external ? ' target="_blank" rel="noopener"' : ''}>${esc(button.label)}</a>`;
       })
       .join('');
+  }
+
+  function renderFooter() {
+    const footer = content.footer || {};
+
+    if (content.hero?.status) {
+      const status = slot('footer-status');
+      status.hidden = false;
+      // The site's ✳ star (as in the roles strips) instead of a "live" dot.
+      status.innerHTML = `${STAR.replace('marquee__sep', 'footer__star')}${esc(content.hero.status)}`;
+    }
+
+    const email = content.contact?.email;
+    const links = [
+      ...(email ? [{ label: ui('email'), url: `mailto:${email}` }] : []),
+      ...(content.contact?.links || []),
+    ].filter((link) => link.url);
+    slot('footer-links').innerHTML = links.map((link) => {
+      const external = !link.url.startsWith('mailto:');
+      return `<li><a href="${esc(link.url)}"${external ? ' target="_blank" rel="noopener"' : ''}>${esc(link.label)}${external ? ' ↗' : ''}</a></li>`;
+    }).join('');
+
+    slot('copyright').textContent = String(footer.copyright || '').replace('{year}', new Date().getFullYear());
+    slot('wordmark').innerHTML = String(content.name || '')
+      .split(/\s+/)
+      .map((word) => `<span class="footer__word">${esc(word)}</span>`)
+      .join(' ');
+  }
+
+  // LinkedIn-style "#OPENTOWORK" frame: a thick arc around the bottom of the photo that fades
+  // out on the right, with the text running along the curve. Drawn on a 100x100 grid, where the
+  // photo is the circle of radius 50; the band covers radius 36-50.
+  function photoBadge(text) {
+    return `<svg class="sticker__badge" viewBox="0 0 100 100" aria-hidden="true">
+      <defs>
+        <linearGradient id="badge-fade" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="100" y2="0">
+          <stop offset=".55" class="sticker__badge-stop"/>
+          <stop offset=".88" class="sticker__badge-stop" stop-opacity="0"/>
+        </linearGradient>
+        <path id="badge-text-path" d="M8.67 30.73A45.6 45.6 0 0 0 84.93 79.31"/>
+      </defs>
+      <path class="sticker__badge-band" d="M13.53 27.21A43 43 0 1 0 92.58 55.98" stroke="url(#badge-fade)"/>
+      <text class="sticker__badge-text"><textPath href="#badge-text-path" startOffset="39%" text-anchor="middle">${esc(text)}</textPath></text>
+    </svg>`;
   }
 
   function renderProject(project, i) {
@@ -245,7 +292,7 @@
         section.hidden = false;
         $('.gallery', section).outerHTML = `<div class="wrap"><p class="gallery-empty">${esc(content.gallery?.empty)}</p></div>`;
       } else {
-        $('[data-gallery-link]')?.remove();
+        $$('[data-gallery-link]').forEach((el) => el.remove());
       }
       return;
     }
@@ -337,6 +384,61 @@
       }
     }, { passive: true });
     update();
+  }
+
+
+  /* ---------------- Footer ---------------- */
+
+  function initFooter() {
+    // Live local time, e.g. "2:32 PM IST".
+    const clock = slot('clock');
+    const zone = content.footer?.timezone;
+    if (clock && zone) {
+      try {
+        const format = new Intl.DateTimeFormat('en-US', { timeZone: zone, hour: 'numeric', minute: '2-digit' });
+        const label = content.footer.timezoneLabel ? ` ${content.footer.timezoneLabel}` : '';
+        const tick = () => { clock.textContent = format.format(new Date()) + label; };
+        tick();
+        setInterval(tick, 30000);
+      } catch { /* unknown time zone: leave it blank */ }
+    }
+
+    // The footer is pinned underneath the page (revealed as the page lifts off it),
+    // but only while it fits on screen; a taller footer just scrolls normally.
+    const footer = $('.site-footer');
+    const checkFit = () => footer.classList.toggle('is-tall', footer.offsetHeight > innerHeight);
+    checkFit();
+    new ResizeObserver(checkFit).observe(footer);
+    addEventListener('resize', checkFit);
+
+    // If a keyboard user tabs into the footer early, jump to the end so they can see where they are.
+    footer.addEventListener('focusin', () => {
+      const end = document.documentElement.scrollHeight - innerHeight;
+      if (scrollY >= end - 2) return;
+      if (lenis) lenis.scrollTo(end, { immediate: true });
+      else window.scrollTo(0, end);
+    });
+  }
+
+  // Sizes the giant name so it spans the footer exactly, on any screen and with any font.
+  function fitWordmark() {
+    const box = $('.footer__wordmark');
+    const inner = slot('wordmark');
+    const fit = () => {
+      const style = getComputedStyle(box);
+      const available = box.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+      if (!available) return;
+      inner.style.fontSize = '100px';
+      const natural = inner.getBoundingClientRect().width;
+      if (natural) inner.style.fontSize = `${Math.floor((10000 * available) / natural) / 100}px`;
+    };
+    fit();
+    // Refit when the screen resizes or the web font arrives (both change the width).
+    // Refitting to the same size changes nothing, so this settles after one pass.
+    const observer = new ResizeObserver(fit);
+    observer.observe(box);
+    observer.observe(inner);
+    document.fonts?.addEventListener('loadingdone', fit);
   }
 
 
@@ -531,6 +633,7 @@
     function open(i) {
       show(i);
       dialog.showModal();
+      if (cursorEl) dialog.append(cursorEl);
       lenis?.stop();
       root.classList.add('is-locked');
       if (motion) gsap.fromTo(dialog, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: 'power2.out' });
@@ -548,6 +651,7 @@
 
     // Runs however the dialog closes (button, Esc, backdrop).
     dialog.addEventListener('close', () => {
+      if (cursorEl) document.body.append(cursorEl);
       closing = false;
       lenis?.start();
       root.classList.remove('is-locked');
@@ -668,6 +772,117 @@
   }
 
 
+  /* ---------------- Custom cursor ---------------- */
+
+  // Mouse and trackpad only: phones and tablets keep their normal touch behaviour.
+  // A dot that tracks the pointer exactly, a ring that trails it (stretching with speed),
+  // and context states: bigger over links, a labelled bubble over projects and the gallery,
+  // and the cartoon glove over the photo sticker.
+  function initCursor() {
+    const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
+    const cursor = document.createElement('div');
+    cursor.className = 'cursor is-hidden';
+    cursor.setAttribute('aria-hidden', 'true');
+    cursor.innerHTML = `<div class="cursor__ring"><div class="cursor__shape"></div><span class="cursor__label"></span>${glove('cursor-glove', 'cursor__glove')}</div><div class="cursor__dot"></div>`;
+    document.body.append(cursor);
+    cursorEl = cursor;
+
+    const ring = $('.cursor__ring', cursor);
+    const shape = $('.cursor__shape', cursor);
+    const label = $('.cursor__label', cursor);
+    const dot = $('.cursor__dot', cursor);
+
+    const setActive = () => root.classList.toggle('has-cursor', finePointer.matches);
+    setActive();
+    finePointer.addEventListener('change', setActive); // e.g. a mouse plugged into a tablet
+
+    let x = -100;
+    let y = -100;
+    let ringX = x;
+    let ringY = y;
+    let seen = false;
+
+    // What the cursor should look like over a given element.
+    const stateFor = (el) => {
+      if (!el?.closest) return { mode: '' };
+      const tone = el.closest('.site-footer, .lightbox') ? 'dark' : el.closest('.marquee__row--roles') ? 'accent' : '';
+      if (el.closest('.sticker')) return { mode: 'glove', tone };
+      const project = el.closest('.project__toggle');
+      if (project) return { mode: 'label', tone, text: ui(project.getAttribute('aria-expanded') === 'true' ? 'cursorClose' : 'cursorOpen') };
+      const gallery = el.closest('.gallery');
+      if (gallery) {
+        const viewing = el.closest('.gallery__btn') && !gallery.classList.contains('is-dragging');
+        return { mode: 'label', tone, text: ui(viewing ? 'cursorView' : 'cursorDrag') };
+      }
+      if ((el.closest('.lightbox__stage') && !el.closest('img')) || el.matches('.lightbox')) return { mode: 'label', tone, text: ui('close') };
+      if (el.closest('a, button, [role="button"], label')) return { mode: 'hover', tone };
+      return { mode: '', tone };
+    };
+    const apply = (el) => {
+      const state = stateFor(el);
+      cursor.dataset.mode = state.mode;
+      cursor.dataset.tone = state.tone || '';
+      if (state.text) label.textContent = state.text;
+    };
+
+    addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse') {
+        cursor.classList.add('is-hidden');
+        return;
+      }
+      x = e.clientX;
+      y = e.clientY;
+      if (!seen) {
+        ringX = x;
+        ringY = y;
+        seen = true;
+      }
+      cursor.classList.remove('is-hidden');
+      dot.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+      if (cursor.classList.contains('is-down')) apply(e.target); // e.g. "View" becomes "Drag" mid-drag
+    }, { passive: true });
+
+    document.addEventListener('pointerover', (e) => apply(e.target));
+    document.documentElement.addEventListener('mouseleave', () => cursor.classList.add('is-hidden'));
+    addEventListener('pointerdown', () => cursor.classList.add('is-down'));
+    addEventListener('pointerup', () => {
+      cursor.classList.remove('is-down');
+      setTimeout(() => apply(document.elementFromPoint(x, y)), 0); // e.g. a project flips Open -> Close
+    });
+
+    // Content moves under a still pointer while scrolling, so re-check what's underneath.
+    let queued = false;
+    addEventListener('scroll', () => {
+      if (queued || !seen) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        queued = false;
+        apply(document.elementFromPoint(x, y));
+      });
+    }, { passive: true });
+
+    // Hide the glove while the real hand replays the slap.
+    $('.sticker:not([hidden])')?.addEventListener('click', () => {
+      cursor.classList.add('is-busy');
+      setTimeout(() => cursor.classList.remove('is-busy'), 1600);
+    });
+
+    // The ring eases towards the pointer and stretches along its direction of travel.
+    gsap.ticker.add(() => {
+      if (!seen) return;
+      const ease = 1 - Math.pow(1 - 0.2, gsap.ticker.deltaRatio());
+      const dx = x - ringX;
+      const dy = y - ringY;
+      ringX += dx * ease;
+      ringY += dy * ease;
+      const stretch = Math.min(Math.hypot(dx, dy) / 150, 0.35);
+      const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
+      ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
+      shape.style.transform = `rotate(${angle}deg) scale(${1 + stretch}, ${1 - stretch * 0.5})`;
+    });
+  }
+
+
   /* ---------------- Motion ---------------- */
 
   function initSmoothScroll() {
@@ -714,17 +929,16 @@
     const nameWords = splitWords($('.hero__name'));
     const tagWords = splitWords($('.hero__tagline'));
     const sticker = $('.sticker:not([hidden])');
-    const status = slot('status');
     const buttons = slot('hero-buttons');
 
     gsap.set(nameWords, { yPercent: 150, rotate: 5, transformOrigin: '0% 100%' });
     gsap.set(tagWords, { yPercent: 130 });
-    gsap.set([status, buttons, '.site-header__inner'], { opacity: 0 });
+    gsap.set([buttons, '.site-header__inner'], { opacity: 0 });
 
     const intro = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } })
       .to(nameWords, { yPercent: 0, rotate: 0, duration: 1.6, stagger: 0.12 })
       .to(tagWords, { yPercent: 0, duration: 1.2, stagger: 0.035 }, 0.4)
-      .to([status, '.site-header__inner'], { opacity: 1, duration: 1 }, 0.6)
+      .to('.site-header__inner', { opacity: 1, duration: 1 }, 0.6)
       .fromTo(buttons, { y: 12 }, { opacity: 1, y: 0, duration: 1 }, 0.95);
 
     // Once the name has landed, a hand slaps the photo on like a sticker.
@@ -751,6 +965,7 @@
 
     // Tweens after the swoop wait for their turn (immediateRender: false) so nothing flashes early.
     return gsap.timeline()
+      .set([hand, burst], { display: 'block' }, 0)
       .set(hand, { autoAlpha: 1, x: 0, y: 0, rotation: -35, scale: 1 }, 0)
       // Swoop in from the bottom-right, held up close (bigger, softer shadow).
       .fromTo(sticker,
@@ -768,7 +983,9 @@
       // Let go: the hand lifts off and leaves.
       .to(hand, {
         x: size * 1.3, y: size * 1.1, rotation: -20, scale: 1.12, autoAlpha: 0, duration: 0.6, ease: 'power2.in',
-      }, 'impact+=0.18');
+      }, 'impact+=0.18')
+      // Take them out of the layout again, so they can't widen the page while invisible.
+      .set([hand, burst], { display: 'none' });
   }
 
   function prepareReveals() {
@@ -793,6 +1010,34 @@
       onEnter: (batch) => gsap.to(batch, {
         opacity: 1, y: 0, duration: 1.1, ease: 'expo.out', stagger: 0.09, overwrite: true,
       }),
+    });
+
+    // Footer: the giant name rises out of the bottom edge, letter by letter, as the page lifts off it.
+    const letters = [];
+    $$('.footer__word').forEach((word) => {
+      const text = word.textContent;
+      word.textContent = '';
+      for (const char of text) {
+        const span = document.createElement('span');
+        span.className = 'footer__letter';
+        span.textContent = char;
+        word.append(span);
+        letters.push(span);
+      }
+    });
+    const footer = $('.site-footer');
+    // Start position set separately, so letters that haven't risen yet stay hidden across refreshes.
+    gsap.set(letters, { yPercent: 105 });
+    gsap.to(letters, {
+      yPercent: 0,
+      ease: 'none',
+      stagger: 0.05,
+      scrollTrigger: {
+        trigger: 'main',
+        start: 'bottom bottom',
+        end: () => `bottom bottom-=${footer.offsetHeight * 0.85}`,
+        scrub: 0.6,
+      },
     });
 
     const strip = $('.gallery__track');

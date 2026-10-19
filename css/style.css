@@ -130,14 +130,15 @@ em { font-style: normal; color: var(--accent); }
 /* Small mono labels used across the page */
 .section__label,
 .nav,
-.status,
 .job__dates,
 .tags,
 .project__links,
 .gallery-hint,
 .copy-btn,
 .contact__links,
-.site-footer,
+.footer__label,
+.footer__meta,
+.footer__bottom,
 .lightbox__count,
 .lightbox__caption {
   font-family: var(--font-mono);
@@ -273,25 +274,6 @@ em { font-style: normal; color: var(--accent); }
   text-wrap: pretty;
 }
 
-/* "Open to roles" badge above the name */
-.status {
-  display: inline-flex;
-  align-items: center;
-  align-self: flex-start;
-  gap: .6rem;
-  margin-bottom: clamp(1.25rem, 2.5vw, 2rem);
-  padding: .55em 1em;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-}
-.status__dot {
-  width: .55rem;
-  height: .55rem;
-  border-radius: 50%;
-  background: var(--accent);
-  animation: pulse 2.4s var(--ease-in-out) infinite;
-}
-
 /* Round photo sticker. Phones and tablets: top-right corner of the hero.
    Desktop: the empty space right of the name, centred on it.
    The outer box is what the slap animation moves; the face inside holds the tilt and hover. */
@@ -311,7 +293,8 @@ em { font-style: normal; color: var(--accent); }
   }
 }
 .sticker__face {
-  --lift: 0; /* 0 = flat on the page, 1 = held up by the hand (bigger, softer shadow) */
+  --lift: 0;
+  position: relative; /* 0 = flat on the page, 1 = held up by the hand (bigger, softer shadow) */
   display: block;
   width: 100%;
   height: 100%;
@@ -325,6 +308,28 @@ em { font-style: normal; color: var(--accent); }
   transform: rotate(0deg); /* resting tilt: try -4deg for a slapped-on angle */
   transition: transform .6s var(--ease-out);
 }
+/* "#OPENTOWORK" frame over the bottom of the photo */
+.sticker__badge {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.sticker__badge-stop { stop-color: var(--ink); }
+.sticker__badge-band {
+  fill: none;
+  stroke-width: 14;
+}
+.sticker__badge-text {
+  fill: var(--paper);
+  font-family: var(--font-display);
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+
 .sticker img {
   width: 100%;
   height: 100%;
@@ -342,7 +347,7 @@ em { font-style: normal; color: var(--accent); }
 .hand,
 .burst {
   position: absolute;
-  display: block;
+  display: none; /* main.js shows them only while the slap plays */
   pointer-events: none;
   visibility: hidden;
   opacity: 0;
@@ -419,10 +424,6 @@ em { font-style: normal; color: var(--accent); }
   color: var(--bg);
 }
 
-@keyframes pulse {
-  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 55%, transparent); }
-  60% { box-shadow: 0 0 0 .5rem transparent; }
-}
 
 
 /* ---------- Sections ---------- */
@@ -941,17 +942,162 @@ em { font-style: normal; color: var(--accent); }
 
 /* ---------- Footer ---------- */
 
+/* The page is a sheet with rounded bottom corners. On screens tall enough, the footer is
+   pinned underneath it, so scrolling to the end lifts the page off and reveals it. */
+main {
+  position: relative;
+  z-index: 1;
+  overflow-x: clip; /* nothing (like the flying photo sticker) may widen the page */
+  padding-bottom: calc(var(--space-section) / 2);
+  border-radius: 0 0 var(--sheet-radius) var(--sheet-radius);
+  background: var(--bg);
+  box-shadow: 0 1.5rem 3rem -1.5rem rgb(0 0 0 / .45);
+}
+:root { --sheet-radius: clamp(1.5rem, 4vw, 3rem); }
+
 .site-footer {
+  /* Gradient built from the palette: near-black, through ember, into vermilion,
+     with a soft glow at the bottom. Always dark, in both themes. */
+  --footer-base: var(--ink);
+  --ember: color-mix(in oklab, var(--accent) 38%, var(--footer-base));
+  --glow: color-mix(in oklab, var(--accent) 72%, var(--paper));
+  position: relative;
+  overflow: hidden;
+  margin-top: calc(var(--sheet-radius) * -1); /* tuck under the page's rounded corners */
+  padding-top: var(--sheet-radius);
+  color: var(--paper);
+  background:
+    radial-gradient(60% 50% at 50% 100%, color-mix(in oklab, var(--glow) 70%, transparent) 0%, transparent 100%),
+    linear-gradient(180deg, var(--footer-base) 0%, var(--footer-base) 32%, var(--ember) 62%, var(--accent) 100%);
+}
+/* In dark mode the page is near-black too, so the footer starts a touch warmer to show the edge. */
+:root[data-theme="dark"] .site-footer { --footer-base: color-mix(in oklab, var(--ink) 88%, var(--accent)); }
+
+/* Fine grain over the gradient: looks printed and hides colour banding. */
+.site-footer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .22;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Pinned only when it fits on screen; main.js adds .is-tall when it doesn't. */
+.site-footer:not(.is-tall) {
+  position: sticky;
+  bottom: 0;
+}
+
+.footer__inner {
+  position: relative;
+  z-index: 1;
+  padding-top: clamp(3rem, 7vw, 5.5rem);
+}
+
+.footer__top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); /* phones: link columns side by side */
+  gap: 2.5rem 2rem;
+}
+.footer__intro { grid-column: 1 / -1; }
+@media (min-width: 48em) {
+  .footer__top { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr); }
+  .footer__intro { grid-column: auto; }
+}
+
+.footer__status {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  font-size: clamp(1.35rem, 2.4vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -.025em;
+  line-height: 1.1;
+}
+.footer__star {
+  flex-shrink: 0;
+  width: .8em;
+  color: var(--accent);
+}
+.footer__meta {
+  margin-top: 1rem;
+  line-height: 1.8;
+  color: color-mix(in oklab, var(--paper) 62%, transparent);
+}
+.footer__clock {
+  color: var(--paper);
+  font-variant-numeric: tabular-nums;
+}
+
+.footer__label {
+  margin-bottom: 1rem;
+  color: color-mix(in oklab, var(--paper) 55%, transparent);
+}
+.footer__list {
+  display: grid;
+  gap: .45rem;
+}
+.footer__list a {
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-decoration: none;
+  background: linear-gradient(var(--accent), var(--accent)) 0 100% / 0 1px no-repeat;
+  padding-bottom: 2px;
+  transition: background-size .45s var(--ease-out), color .3s;
+}
+.footer__list a:hover {
+  color: var(--accent);
+  background-size: 100% 1px;
+}
+
+.footer__bottom {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 1rem;
-  padding-top: var(--space-section);
-  padding-bottom: 2rem;
-  color: var(--muted);
+  margin-top: clamp(3rem, 6vw, 5rem);
+  padding-top: 1.25rem;
+  border-top: 1px solid color-mix(in oklab, var(--paper) 18%, transparent);
+  color: color-mix(in oklab, var(--paper) 62%, transparent);
 }
-.site-footer a { text-decoration: none; }
-.site-footer a:hover { color: var(--fg); }
+.footer__bottom a { text-decoration: none; }
+.footer__bottom a:hover { color: var(--paper); }
+
+/* The giant name: sized by main.js to fill the width, cropped by the bottom edge. */
+.footer__wordmark {
+  position: relative;
+  z-index: 1;
+  margin-top: clamp(1.5rem, 4vw, 3rem);
+  margin-bottom: -.06em;
+  padding-inline: var(--gutter);
+  line-height: 0;
+  white-space: nowrap;
+}
+.footer__wordmark-inner {
+  display: inline-block;
+  font-size: calc((100vw - 2 * var(--gutter)) / 6.9); /* first guess; main.js refines it */
+  font-weight: 800;
+  line-height: .78;
+  letter-spacing: -.055em;
+  margin-left: -.04em;
+  color: var(--paper);
+}
+/* Each word is its own mask, so rising letters only appear inside their own line. */
+.footer__word {
+  display: inline-block;
+  vertical-align: top;
+  overflow: clip;
+  padding: .14em .06em .22em;
+  margin: -.14em -.06em -.22em;
+}
+.footer__letter { display: inline-block; }
+
+@media (max-width: 40em) {
+  .footer__word { display: block; } /* two lines on phones, so it can be bigger */
+}
 
 .load-error {
   max-width: 40rem;
@@ -959,6 +1105,147 @@ em { font-style: normal; color: var(--accent); }
   padding: 0 var(--gutter);
   font-family: var(--font-mono);
   font-size: .9rem;
+}
+
+
+/* ---------- Custom cursor (mouse and trackpad only; see initCursor in main.js) ---------- */
+
+html.has-cursor,
+html.has-cursor * { cursor: none !important; }
+
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+}
+html:not(.has-cursor) .cursor { display: none; }
+
+.cursor__dot,
+.cursor__ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  transition: opacity .25s;
+}
+.cursor.is-hidden .cursor__dot,
+.cursor.is-hidden .cursor__ring { opacity: 0; }
+
+/* Dot: exact position. The halo keeps it visible on vermilion too. */
+.cursor__dot {
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 2px var(--bg);
+  transition: opacity .25s, scale .35s var(--ease-out);
+}
+
+/* Ring: trails the pointer; main.js rotates and stretches it with speed. */
+.cursor__shape {
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  width: 40px;
+  height: 40px;
+  border: 1.5px solid var(--fg);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--bg) 55%, transparent);
+  transition:
+    width .45s var(--ease-out), height .45s var(--ease-out),
+    top .45s var(--ease-out), left .45s var(--ease-out),
+    background-color .3s, border-color .3s, scale .3s var(--ease-out);
+}
+
+.cursor__label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  translate: -50% -50%;
+  scale: .5;
+  opacity: 0;
+  color: var(--bg);
+  font-family: var(--font-mono);
+  font-size: .7rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: opacity .25s, scale .45s var(--ease-out);
+}
+
+.cursor__glove {
+  position: absolute;
+  top: -30px;
+  left: -24px;
+  width: 52px;
+  max-width: none; /* the cursor's container has no width, so the global max-width: 100% would squash it */
+  overflow: visible;
+  rotate: -20deg;
+  scale: .4;
+  opacity: 0;
+  transition: opacity .25s, scale .4s var(--ease-out);
+}
+
+/* Over links and buttons: a bigger, softly filled ring. */
+.cursor[data-mode="hover"] .cursor__shape {
+  top: -32px;
+  left: -32px;
+  width: 64px;
+  height: 64px;
+  border-color: var(--accent);
+  background: color-mix(in oklab, var(--accent) 14%, transparent);
+}
+
+/* Projects, gallery, lightbox: a solid bubble with a label ("Open", "View", "Drag"...). */
+.cursor[data-mode="label"] .cursor__shape {
+  top: -44px;
+  left: -44px;
+  width: 88px;
+  height: 88px;
+  border-color: var(--fg);
+  background: var(--fg);
+}
+.cursor[data-mode="label"] .cursor__label {
+  opacity: 1;
+  scale: 1;
+}
+
+/* Over the photo sticker: the cartoon glove. */
+.cursor[data-mode="glove"] .cursor__shape {
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-width: 0;
+}
+.cursor[data-mode="glove"] .cursor__glove {
+  opacity: 1;
+  scale: 1;
+}
+.cursor.is-busy .cursor__glove { opacity: 0; }
+
+.cursor[data-mode="hover"] .cursor__dot,
+.cursor[data-mode="label"] .cursor__dot,
+.cursor[data-mode="glove"] .cursor__dot { scale: 0; }
+
+/* Pressed */
+.cursor.is-down .cursor__shape { scale: .85; }
+.cursor.is-down .cursor__glove { scale: .85; }
+
+/* Over the always-dark footer and lightbox: light colours. Over the vermilion strip: dark dot. */
+.cursor[data-tone="dark"] {
+  --fg: var(--paper);
+  --bg: var(--ink);
+}
+.cursor[data-tone="accent"] .cursor__dot { background: var(--fg); }
+
+/* High-contrast mode: back to the system cursor. */
+@media (forced-colors: active) {
+  html.has-cursor,
+  html.has-cursor * { cursor: auto !important; }
+  .cursor { display: none; }
 }
 
 
@@ -975,12 +1262,12 @@ html.is-locked { overflow: hidden; }
 
 /* ---------- Reduced motion ---------- */
 
+/* No transitions or animations at all. (A tiny duration like .01ms would turn every
+   property change into a transition, which breaks size measurements in main.js.) */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
-    animation-duration: .01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: .01ms !important;
-    transition-delay: 0s !important;
+    animation: none !important;
+    transition: none !important;
     scroll-behavior: auto !important;
   }
 }
