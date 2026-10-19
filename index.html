@@ -6,12 +6,12 @@
 
   <!-- Search results and link previews read these, not content.json, so edit them here. -->
   <title>Zayed Makandar · AI/ML Engineer</title>
-  <meta name="description" content="Zayed Makandar, AI/ML engineer. I make models run on real hardware.">
+  <meta name="description" content="Zayed Makandar, AI/ML engineer. I build vision, speech and LLM systems that hold up in the real world.">
   <link rel="canonical" href="https://zayedmakandar.com/">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://zayedmakandar.com/">
   <meta property="og:title" content="Zayed Makandar · AI/ML Engineer">
-  <meta property="og:description" content="I make models run on real hardware.">
+  <meta property="og:description" content="AI/ML engineer building vision, speech and LLM systems that hold up in the real world.">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#F3EFE6">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -45,9 +45,9 @@
 
   <header class="site-header">
     <div class="site-header__inner wrap">
-      <a class="brand" href="#top"><span class="brand__dot" aria-hidden="true"></span><span data-text="name"></span></a>
       <nav class="nav" aria-label="Sections">
         <a href="#work" data-text="work.label"></a>
+        <a href="#skills" class="nav__keep" data-text="skills.label"></a>
         <a href="#projects" class="nav__keep" data-text="projects.label"></a>
         <a href="#gallery" data-text="gallery.label" data-gallery-link></a>
         <a href="#contact" class="nav__keep" data-text="contact.label"></a>
@@ -63,16 +63,17 @@
 
   <main id="main">
     <section class="hero wrap" id="top">
-      <h1 class="hero__name" data-slot="name"></h1>
+      <p class="status" data-slot="status" hidden></p>
+      <div class="hero__title">
+        <h1 class="hero__name" data-slot="name"></h1>
+        <span class="sticker" data-slot="sticker" aria-hidden="true" hidden></span>
+      </div>
       <p class="hero__tagline" data-rich="hero.tagline"></p>
-      <p class="readout" data-slot="readout"></p>
+      <p class="hero__actions" data-slot="hero-buttons"></p>
     </section>
 
     <section class="section wrap" id="about" aria-labelledby="about-label">
-      <div class="section__label">
-        <h2 id="about-label" data-text="about.label"></h2>
-        <div class="avatar" data-slot="avatar" hidden></div>
-      </div>
+      <h2 class="section__label" id="about-label" data-text="about.label"></h2>
       <div class="section__body about" data-slot="about"></div>
     </section>
 
@@ -81,10 +82,24 @@
       <ul class="section__body jobs" data-slot="work"></ul>
     </section>
 
-    <section class="marquee" aria-labelledby="skills-label">
-      <h2 class="sr-only" id="skills-label" data-text="skills.label"></h2>
-      <ul class="sr-only" data-slot="skills-list"></ul>
-      <div class="marquee__track" aria-hidden="true" data-slot="skills"></div>
+    <section class="marquee" aria-labelledby="roles-label">
+      <h2 class="sr-only" id="roles-label" data-text="roles.label"></h2>
+      <ul class="sr-only" data-slot="roles-list"></ul>
+      <!-- Three moving strips: caption, roles, caption. data-direction -1 runs the opposite way. -->
+      <div class="marquee__row marquee__row--caption" aria-hidden="true" data-direction="-1" data-speed="0.6">
+        <div class="marquee__track"></div>
+      </div>
+      <div class="marquee__row marquee__row--roles" aria-hidden="true">
+        <div class="marquee__track" data-slot="roles"></div>
+      </div>
+      <div class="marquee__row marquee__row--caption" aria-hidden="true" data-direction="-1" data-speed="0.6" data-offset="0.5">
+        <div class="marquee__track"></div>
+      </div>
+    </section>
+
+    <section class="section wrap" id="skills" aria-labelledby="skills-label">
+      <h2 class="section__label" id="skills-label" data-text="skills.label"></h2>
+      <ul class="section__body skills" data-slot="skills"></ul>
     </section>
 
     <section class="section wrap" id="projects" aria-labelledby="projects-label">

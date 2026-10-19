@@ -4,17 +4,23 @@
   "name": "Zayed Makandar",
 
   "hero": {
-    "tagline": "AI/ML Engineer.\nI make models run on *real hardware*.",
-    "readout": "Live on your hardware"
+    "status": "Open to AI/ML roles",
+    "tagline": "AI/ML Engineer.\nI build vision, speech and LLM systems that hold up in the real world.",
+    "photo": "assets/zayed.jpg",
+    "buttons": [
+      { "label": "View projects ↓", "url": "#projects" },
+      { "label": "Resume ↗", "url": "resume.pdf" }
+    ]
   },
 
   "about": {
     "label": "About",
-    "photo": "assets/zayed.jpg",
     "lines": [
       "I'm an AI/ML engineer in Karnataka, India.",
-      "I build vision, speech and language systems, then make them fast enough for the hardware people actually have.",
-      "A CPU-only server. One shared GPU. A kiosk in a noisy lobby."
+      "I build intelligent systems that see, listen and understand language, then make them fast enough for the hardware people actually have.",
+      "A CPU-only server. One shared GPU. A kiosk in a noisy lobby.",
+      "When a system isn't fast or intelligent enough, I dig in: read the research, test the options, and keep what the benchmarks prove.",
+      "I also designed and taught an AI/ML curriculum, from classical ML to transformers, for trainers and students."
     ]
   },
 
@@ -25,9 +31,47 @@
     ]
   },
 
+  "roles": {
+    "label": "Roles I work in",
+    "caption": "Open to work as",
+    "items": [
+      "AI/ML Engineer",
+      "Computer Vision Engineer",
+      "GenAI / LLM Engineer",
+      "Python AI Developer",
+      "AI Agent Engineer",
+      "Edge AI Engineer"
+    ]
+  },
+
   "skills": {
     "label": "Skills",
-    "items": ["Python", "PyTorch", "LLMs", "RAG", "Computer Vision", "ONNX", "vLLM", "FastAPI", "Docker"]
+    "groups": [
+      {
+        "title": "Programming",
+        "items": ["Python", "SQL", "Git", "Linux"]
+      },
+      {
+        "title": "GenAI & LLMs",
+        "items": ["LLMs", "RAG", "Vision-language models", "Hugging Face Transformers", "LangGraph", "Ollama", "ChromaDB", "RAGAS", "Whisper", "spaCy", "NLTK"]
+      },
+      {
+        "title": "AI / ML",
+        "items": ["PyTorch", "scikit-learn", "NumPy", "Pandas", "CNNs", "RNN / LSTM / GRU", "Transformers & attention", "Autoencoders & GANs", "Classical ML", "Feature engineering", "Model evaluation"]
+      },
+      {
+        "title": "Computer Vision",
+        "items": ["OpenCV", "MediaPipe", "InsightFace", "YOLO (Ultralytics)", "VLM-based OCR", "rPPG"]
+      },
+      {
+        "title": "Model Optimisation",
+        "items": ["ONNX Runtime", "TensorRT", "INT8 / INT4 quantisation", "vLLM", "OpenVINO", "llama.cpp", "CUDA"]
+      },
+      {
+        "title": "Deployment & MLOps",
+        "items": ["FastAPI", "Docker", "PostgreSQL", "MLflow", "GitHub Actions"]
+      }
+    ]
   },
 
   "projects": {
@@ -76,7 +120,9 @@
     "links": [
       { "label": "LinkedIn", "url": "https://www.linkedin.com/in/zayed-makandar-642536422/" },
       { "label": "Resume", "url": "resume.pdf" },
-      { "label": "GitHub", "url": "" }
+      { "label": "GitHub", "url": "https://github.com/Zayed-Makandar" },
+      { "label": "Instagram", "url": "https://www.instagram.com/zayedmakandar03/" }
+
     ]
   },
 
@@ -84,7 +130,6 @@
 
   "ui": {
     "at": "at",
-    "threads": "threads",
     "photo": "Photo",
     "copy": "Copy",
     "copied": "Copied",

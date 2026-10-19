@@ -11,7 +11,7 @@
   const motion = !reduceMotion && 'gsap' in window && 'ScrollTrigger' in window;
 
   const PHOTO_DIR = 'assets/gallery';
-  const MARQUEE_SPEED = 45; // px per second when the page is still
+  const MARQUEE_SPEED = 90; // px per second when the page is still
 
   let content = {};
   let lenis = null;
@@ -28,6 +28,32 @@
   const rich = (s) => esc(s).replace(/\*([^*]+)\*/g, '<em>$1</em>').replace(/\n/g, '<br>');
 
   const STAR = '<svg class="marquee__sep" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5v19M2.5 12h19M5.3 5.3l13.4 13.4M18.7 5.3 5.3 18.7" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></svg>';
+
+  // Cartoon glove that slaps the photo sticker on. Drawn twice: a thick ink pass, then a
+  // cream fill on top, which leaves one clean outline around the whole hand.
+  const HAND = `<span class="hand"><svg viewBox="0 0 200 250" aria-hidden="true">
+    <defs><g id="hand-glove">
+      <rect x="47" y="34" width="30" height="100" rx="15" transform="rotate(-7 62 125)"/>
+      <rect x="81" y="20" width="30" height="110" rx="15"/>
+      <rect x="115" y="28" width="30" height="102" rx="15" transform="rotate(5 130 125)"/>
+      <rect x="147" y="56" width="26" height="80" rx="13" transform="rotate(13 160 130)"/>
+      <rect x="40" y="110" width="30" height="90" rx="15" transform="rotate(-33 55 190)"/>
+      <rect x="44" y="96" width="128" height="112" rx="48"/>
+      <rect x="52" y="196" width="112" height="48" rx="13"/>
+    </g></defs>
+    <use href="#hand-glove" class="hand__outline"/>
+    <use href="#hand-glove" class="hand__fill"/>
+    <path class="hand__lines" d="M84 148v30M108 144v34M132 148v30M58 213h100"/>
+  </svg></span>`;
+
+  // Comic "impact" lines that flash around the sticker when it lands.
+  const BURST = `<span class="burst"><svg viewBox="-80 -80 160 160" aria-hidden="true">${
+    Array.from({ length: 8 }, (_, i) => {
+      const a = ((i * 45 + 22.5) * Math.PI) / 180;
+      const at = (r) => `${(Math.cos(a) * r).toFixed(1)} ${(Math.sin(a) * r).toFixed(1)}`;
+      return `<path d="M${at(60)}L${at(75)}"/>`;
+    }).join('')
+  }</svg></span>`;
 
   start();
 
@@ -49,7 +75,6 @@
     render(photos);
     initTheme();
     initHeader();
-    initReadout();
     initProjects();
     initCopy();
     if (photos.length) initGallery(photos);
@@ -97,20 +122,11 @@
     $$('[data-text]').forEach((el) => { el.textContent = get(content, el.dataset.text) ?? ''; });
     $$('[data-rich]').forEach((el) => { el.innerHTML = rich(get(content, el.dataset.rich)); });
 
-    slot('name').innerHTML = String(content.name || '')
-      .split(/\s+/)
-      .map((word) => `<span class="hero__word">${esc(word)}</span>`)
-      .join(' ');
+    renderHero();
 
-    const about = content.about || {};
-    slot('about').innerHTML = (about.lines || [])
+    slot('about').innerHTML = (content.about?.lines || [])
       .map((line) => `<p data-reveal="words">${rich(line)}</p>`)
       .join('');
-    if (about.photo) {
-      const avatar = slot('avatar');
-      avatar.hidden = false;
-      avatar.innerHTML = `<img src="${esc(about.photo)}" alt="${esc(content.name)}" width="200" height="200" loading="lazy" decoding="async">`;
-    }
 
     slot('work').innerHTML = (content.work?.items || []).map((job) => `
       <li class="job" data-reveal="fade">
@@ -118,11 +134,25 @@
         <p class="job__dates">${esc(job.dates)}</p>
       </li>`).join('');
 
-    const skills = content.skills?.items || [];
-    slot('skills-list').innerHTML = skills.map((s) => `<li>${esc(s)}</li>`).join('');
-    slot('skills').innerHTML = `<div class="marquee__group">${
-      skills.map((s) => `<span class="marquee__item">${esc(s)}</span>${STAR}`).join('')
+    const roles = content.roles?.items || [];
+    slot('roles-list').innerHTML = roles.map((r) => `<li>${esc(r)}</li>`).join('');
+    slot('roles').innerHTML = `<div class="marquee__group">${
+      roles.map((r) => `<span class="marquee__item">${esc(r)}</span>${STAR}`).join('')
     }</div>`;
+    const caption = content.roles?.caption;
+    $$('.marquee__row--caption').forEach((row) => {
+      if (!caption) {
+        row.remove();
+        return;
+      }
+      $('.marquee__track', row).innerHTML = `<div class="marquee__group"><span class="marquee__caption">${esc(caption)}</span>${STAR}</div>`;
+    });
+
+    slot('skills').innerHTML = (content.skills?.groups || []).map((group) => `
+      <li class="skill-group" data-reveal="fade">
+        <h3 class="skill-group__title">${esc(group.title)}</h3>
+        <ul class="skill-group__items">${(group.items || []).map((s) => `<li>${esc(s)}</li>`).join('')}</ul>
+      </li>`).join('');
 
     slot('projects').innerHTML = (content.projects?.items || []).map(renderProject).join('');
 
@@ -139,6 +169,35 @@
       .join('');
 
     slot('footer').textContent = String(content.footer || '').replace('{year}', new Date().getFullYear());
+  }
+
+  function renderHero() {
+    const hero = content.hero || {};
+
+    if (hero.status) {
+      const status = slot('status');
+      status.hidden = false;
+      status.innerHTML = `<span class="status__dot" aria-hidden="true"></span>${esc(hero.status)}`;
+    }
+
+    slot('name').innerHTML = String(content.name || '')
+      .split(/\s+/)
+      .map((word) => `<span class="hero__word">${esc(word)}</span>`)
+      .join(' ');
+
+    if (hero.photo) {
+      const sticker = slot('sticker');
+      sticker.hidden = false;
+      sticker.innerHTML = `<span class="sticker__face"><img src="${esc(hero.photo)}" alt="" width="200" height="200" decoding="async"></span>${BURST}${HAND}`;
+    }
+
+    slot('hero-buttons').innerHTML = (hero.buttons || [])
+      .filter((button) => button.url)
+      .map((button, i) => {
+        const external = !button.url.startsWith('#');
+        return `<a class="btn${i === 0 ? ' btn--primary' : ''}" href="${esc(button.url)}"${external ? ' target="_blank" rel="noopener"' : ''}>${esc(button.label)}</a>`;
+      })
+      .join('');
   }
 
   function renderProject(project, i) {
@@ -278,84 +337,6 @@
       }
     }, { passive: true });
     update();
-  }
-
-
-  /* ---------------- Hardware readout (the playful bit) ---------------- */
-
-  function initReadout() {
-    const el = slot('readout');
-    const specs = [];
-    const gpu = detectGPU();
-    if (gpu) specs.push(['GPU', esc(gpu)]);
-    if (navigator.hardwareConcurrency) specs.push(['CPU', `${navigator.hardwareConcurrency} ${esc(ui('threads'))}`]);
-    specs.push(['FPS', '<span class="readout__fps">--</span>']);
-
-    el.innerHTML = `<span class="readout__label"><span class="readout__dot" aria-hidden="true"></span>${esc(content.hero?.readout)}</span>`
-      + specs.map(([key, value]) => `<span class="readout__spec">${key} <b>${value}</b></span>`).join('');
-
-    // Measure the real frame rate, only while the readout is on screen.
-    const out = $('.readout__fps', el);
-    let loop = 0;
-    const run = () => {
-      const id = ++loop;
-      let frames = 0;
-      let since = performance.now();
-      const tick = (now) => {
-        if (id !== loop) return;
-        frames++;
-        const elapsed = now - since;
-        if (elapsed >= 1000) {
-          if (elapsed < 1500) out.textContent = Math.round((frames * 1000) / elapsed);
-          frames = 0;
-          since = now;
-        }
-        requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
-    };
-    new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) run();
-      else loop++;
-    }).observe(el);
-  }
-
-  function detectGPU() {
-    try {
-      const gl = document.createElement('canvas').getContext('webgl');
-      if (!gl) return null;
-      let name = gl.getParameter(gl.RENDERER);
-      if (!name || /^WebKit WebGL$/i.test(name)) {
-        const info = gl.getExtension('WEBGL_debug_renderer_info');
-        if (info) name = gl.getParameter(info.UNMASKED_RENDERER_WEBGL);
-      }
-      gl.getExtension('WEBGL_lose_context')?.loseContext();
-      return tidyGPUName(name);
-    } catch {
-      return null;
-    }
-  }
-
-  function tidyGPUName(raw) {
-    if (!raw) return null;
-    let name = String(raw);
-    // Chrome/Edge: "ANGLE (NVIDIA, NVIDIA GeForce RTX 3060 (0x00002503) Direct3D11 vs_5_0 ps_5_0, D3D11)"
-    const angle = name.match(/^ANGLE \((.*)\)$/);
-    if (angle) {
-      const parts = angle[1].split(',');
-      name = (parts[1] || parts[0]).trim();
-    }
-    name = name
-      .replace(/^ANGLE \w+ Renderer:\s*/i, '')        // "ANGLE Metal Renderer: Apple M2"
-      .replace(/\(0x[0-9a-f]+\)/gi, '')
-      .replace(/\b(Direct3D|OpenGL|Vulkan|Metal)\S*.*$/i, '')
-      .replace(/\b[vp]s_\d.*$/i, '')
-      .replace(/\((R|TM)\)/gi, '')
-      .replace(/\s{2,}/g, ' ')
-      .trim();
-    if (!name || /^(WebKit WebGL|Mozilla|Generic Renderer)$/i.test(name)) return null;
-    if (/swiftshader|llvmpipe|software|microsoft basic/i.test(name)) return null;
-    return name;
   }
 
 
@@ -620,54 +601,69 @@
   }
 
 
-  /* ---------------- Skills marquee ---------------- */
+  /* ---------------- Roles marquee ---------------- */
 
   function initMarquee() {
     const band = $('.marquee');
-    const track = slot('skills');
-    const group = $('.marquee__group', track);
-    if (!group) return;
+    // Each strip has its own track; data-direction and data-speed tune it relative to the rest.
+    const rows = $$('.marquee__row', band)
+      .map((row) => ({
+        row,
+        track: $('.marquee__track', row),
+        group: $('.marquee__group', row),
+        dir: Number(row.dataset.direction || 1),
+        pace: Number(row.dataset.speed || 1),
+        offset: Number(row.dataset.offset || 0), // start part-way through, so stacked strips don't line up
+        width: 0,
+        x: 0,
+      }))
+      .filter((r) => r.group);
+    if (!rows.length) return;
 
     if (!motion) {
       band.classList.add('is-static');
       return;
     }
 
-    let width = 0;
-    let x = 0;
     let speed = 1;
-    let dir = 1;
+    let scrollDir = 1;
     let hovering = false;
     let visible = true;
 
-    // Repeat the group until it covers the band, so the loop never shows a gap.
-    const fill = () => {
-      $$('.marquee__group', track).slice(1).forEach((g) => g.remove());
-      width = group.getBoundingClientRect().width;
-      if (!width) return;
-      const copies = Math.ceil(band.clientWidth / width) + 1;
-      for (let i = 1; i < copies; i++) track.append(group.cloneNode(true));
+    // Repeat each group until it covers the band, so the loop never shows a gap.
+    const fill = (r) => {
+      $$('.marquee__group', r.track).slice(1).forEach((g) => g.remove());
+      r.width = r.group.getBoundingClientRect().width;
+      if (!r.width) return;
+      const copies = Math.ceil(band.clientWidth / r.width) + 1;
+      for (let i = 1; i < copies; i++) r.track.append(r.group.cloneNode(true));
     };
-    fill();
-    const resize = new ResizeObserver(fill);
-    resize.observe(band);
-    resize.observe(group);
+    rows.forEach((r) => {
+      fill(r);
+      r.x = -r.width * r.offset;
+      const resize = new ResizeObserver(() => fill(r));
+      resize.observe(r.row);
+      resize.observe(r.group);
+    });
 
     new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; }).observe(band);
     band.addEventListener('pointerenter', () => { hovering = true; });
     band.addEventListener('pointerleave', () => { hovering = false; });
 
-    // Drifts slowly; speeds up with scroll velocity and follows the scroll direction.
+    // Drifts on its own; speeds up with scroll velocity and follows the scroll direction.
     gsap.ticker.add((time, deltaMs) => {
-      if (!visible || !width) return;
+      if (!visible) return;
       const velocity = lenis ? lenis.velocity : 0;
-      if (lenis && lenis.direction) dir = lenis.direction;
+      if (lenis && lenis.direction) scrollDir = lenis.direction;
       const target = (hovering ? 0.25 : 1) + Math.min(Math.abs(velocity) * 0.12, 6);
       speed += (target - speed) * 0.06;
-      x -= dir * speed * MARQUEE_SPEED * (deltaMs / 1000);
-      x %= width;
-      if (x > 0) x -= width;
-      track.style.transform = `translate3d(${x}px, 0, 0)`;
+      rows.forEach((r) => {
+        if (!r.width) return;
+        r.x -= scrollDir * r.dir * r.pace * speed * MARQUEE_SPEED * (deltaMs / 1000);
+        r.x %= r.width;
+        if (r.x > 0) r.x -= r.width;
+        r.track.style.transform = `translate3d(${r.x}px, 0, 0)`;
+      });
     });
   }
 
@@ -717,16 +713,62 @@
   function prepareHero() {
     const nameWords = splitWords($('.hero__name'));
     const tagWords = splitWords($('.hero__tagline'));
+    const sticker = $('.sticker:not([hidden])');
+    const status = slot('status');
+    const buttons = slot('hero-buttons');
 
     gsap.set(nameWords, { yPercent: 150, rotate: 5, transformOrigin: '0% 100%' });
     gsap.set(tagWords, { yPercent: 130 });
-    gsap.set([slot('readout'), '.site-header__inner'], { opacity: 0 });
+    gsap.set([status, buttons, '.site-header__inner'], { opacity: 0 });
 
-    return gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } })
+    const intro = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } })
       .to(nameWords, { yPercent: 0, rotate: 0, duration: 1.6, stagger: 0.12 })
       .to(tagWords, { yPercent: 0, duration: 1.2, stagger: 0.035 }, 0.4)
-      .to('.site-header__inner', { opacity: 1, duration: 1 }, 0.7)
-      .fromTo(slot('readout'), { y: 12 }, { opacity: 1, y: 0, duration: 1 }, 1);
+      .to([status, '.site-header__inner'], { opacity: 1, duration: 1 }, 0.6)
+      .fromTo(buttons, { y: 12 }, { opacity: 1, y: 0, duration: 1 }, 0.95);
+
+    // Once the name has landed, a hand slaps the photo on like a sticker.
+    // Clicking the photo later replays it.
+    if (sticker) {
+      gsap.set(sticker, { autoAlpha: 0 });
+      intro.add(slapSticker(sticker), 0.8);
+
+      let replay = null;
+      sticker.style.cursor = 'pointer';
+      sticker.addEventListener('click', () => {
+        if (intro.isActive() || replay?.isActive()) return;
+        replay = slapSticker(sticker);
+      });
+    }
+    return intro;
+  }
+
+  function slapSticker(sticker) {
+    const hand = $('.hand', sticker);
+    const face = $('.sticker__face', sticker);
+    const burst = $('.burst', sticker);
+    const size = sticker.offsetWidth;
+
+    // Tweens after the swoop wait for their turn (immediateRender: false) so nothing flashes early.
+    return gsap.timeline()
+      .set(hand, { autoAlpha: 1, x: 0, y: 0, rotation: -35, scale: 1 }, 0)
+      // Swoop in from the bottom-right, held up close (bigger, softer shadow).
+      .fromTo(sticker,
+        { autoAlpha: 1, x: innerWidth * 0.5, y: innerHeight * 0.45, scale: 1.45, rotation: 22 },
+        { x: 0, y: -size * 0.12, scale: 1.28, rotation: 6, duration: 0.55, ease: 'power3.out' }, 0)
+      .fromTo(face, { '--lift': 1 }, { '--lift': 0.7, duration: 0.55, ease: 'power3.out' }, 0)
+      // Slap it down.
+      .to(sticker, { y: 0, scale: 1, rotation: 0, duration: 0.13, ease: 'power4.in' })
+      .to(face, { '--lift': 0, duration: 0.13, ease: 'power4.in' }, '<')
+      .addLabel('impact')
+      // Squash and wobble, impact lines, and a little shake of the name.
+      .fromTo(sticker, { scaleX: 1.07, scaleY: 0.93 }, { scaleX: 1, scaleY: 1, duration: 0.6, ease: 'elastic.out(1, 0.35)', immediateRender: false }, 'impact')
+      .fromTo(burst, { autoAlpha: 1, scale: 0.85 }, { autoAlpha: 0, scale: 1.2, duration: 0.45, ease: 'power2.out', immediateRender: false }, 'impact')
+      .fromTo('.hero__name', { x: 0 }, { keyframes: { x: [-6, 5, -3, 1, 0] }, duration: 0.3, ease: 'none', immediateRender: false }, 'impact')
+      // Let go: the hand lifts off and leaves.
+      .to(hand, {
+        x: size * 1.3, y: size * 1.1, rotation: -20, scale: 1.12, autoAlpha: 0, duration: 0.6, ease: 'power2.in',
+      }, 'impact+=0.18');
   }
 
   function prepareReveals() {
