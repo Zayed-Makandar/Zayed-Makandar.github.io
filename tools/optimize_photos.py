@@ -6,8 +6,7 @@ Turn everything in ./photos into web-ready WebP files and keep photos.json in sy
     python tools/optimize_photos.py --force   # redo every photo
 
 For each photo it writes:
-    assets/gallery/full/<id>.webp    max 1600px wide (shown in the lightbox)
-    assets/gallery/thumb/<id>.webp   800px tall (shown in the strip)
+    assets/gallery/thumb/<id>.webp   800px tall (shown in the gallery strip)
 
 photos.json is where you write captions. The script keeps your captions and the
 order you put entries in, adds new photos at the end, and removes entries (and
@@ -40,12 +39,9 @@ except ImportError:
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC_DIR = ROOT / "photos"
-FULL_DIR = ROOT / "assets" / "gallery" / "full"
 THUMB_DIR = ROOT / "assets" / "gallery" / "thumb"
 MANIFEST = ROOT / "photos.json"
 
-FULL_MAX_WIDTH = 1600
-FULL_QUALITY = 80
 THUMB_HEIGHT = 800
 THUMB_MAX_WIDTH = 2400  # keeps very wide panoramas in check
 THUMB_QUALITY = 72
@@ -100,35 +96,26 @@ def find_sources():
 
 
 def is_fresh(src, entry):
-    full = FULL_DIR / f"{entry['id']}.webp"
     thumb = THUMB_DIR / f"{entry['id']}.webp"
-    if not (full.exists() and thumb.exists() and entry.get("w") and entry.get("h")):
+    if not (thumb.exists() and entry.get("w") and entry.get("h")):
         return False
-    mtime = src.stat().st_mtime
-    return full.stat().st_mtime >= mtime and thumb.stat().st_mtime >= mtime
+    return thumb.stat().st_mtime >= src.stat().st_mtime
 
 
 def process(src, photo_id):
-    """Write the full-size and thumbnail WebPs. Returns (width, height) of the full image."""
+    """Write the WebP. Returns its (width, height), which the page uses to reserve space."""
     with Image.open(src) as im:
         icc = im.info.get("icc_profile")  # keeps colours right for wide-gamut phone photos
         if im.format == "JPEG":
-            im.draft(im.mode, (FULL_MAX_WIDTH, FULL_MAX_WIDTH))  # faster decode of huge JPEGs
+            im.draft(im.mode, (THUMB_MAX_WIDTH, THUMB_HEIGHT))  # faster decode of huge JPEGs
         im = ImageOps.exif_transpose(im)  # respect the camera's rotation flag
         has_alpha = im.mode in ("RGBA", "LA") or (im.mode == "P" and "transparency" in im.info)
         im = im.convert("RGBA" if has_alpha else "RGB")
 
-        full = im
-        if full.width > FULL_MAX_WIDTH:
-            height = round(full.height * FULL_MAX_WIDTH / full.width)
-            full = full.resize((FULL_MAX_WIDTH, height), Image.Resampling.LANCZOS)
-        save_webp(full, FULL_DIR / f"{photo_id}.webp", FULL_QUALITY, icc)
+        im.thumbnail((THUMB_MAX_WIDTH, THUMB_HEIGHT), Image.Resampling.LANCZOS)
+        save_webp(im, THUMB_DIR / f"{photo_id}.webp", THUMB_QUALITY, icc)
 
-        thumb = im.copy()
-        thumb.thumbnail((THUMB_MAX_WIDTH, THUMB_HEIGHT), Image.Resampling.LANCZOS)
-        save_webp(thumb, THUMB_DIR / f"{photo_id}.webp", THUMB_QUALITY, icc)
-
-        return full.width, full.height
+        return im.width, im.height
 
 
 def save_webp(img, path, quality, icc):
@@ -151,7 +138,6 @@ def main():
         sys.exit("This Pillow build has no WebP support. Try:  pip install --upgrade Pillow")
 
     SRC_DIR.mkdir(exist_ok=True)
-    FULL_DIR.mkdir(parents=True, exist_ok=True)
     THUMB_DIR.mkdir(parents=True, exist_ok=True)
 
     sources = {p.name: p for p in find_sources()}
@@ -190,16 +176,14 @@ def main():
             continue
         done += 1
         print(f"  + {src.name}  ->  {entry['w']}x{entry['h']}  "
-              f"({kb(src)} -> full {kb(FULL_DIR / (entry['id'] + '.webp'))}, "
-              f"thumb {kb(THUMB_DIR / (entry['id'] + '.webp'))})")
+              f"({kb(src)} -> {kb(THUMB_DIR / (entry['id'] + '.webp'))})")
 
     # Delete WebPs that no longer belong to any photo.
     orphans = 0
-    for folder in (FULL_DIR, THUMB_DIR):
-        for webp in folder.glob("*.webp"):
-            if webp.stem not in taken:
-                webp.unlink()
-                orphans += 1
+    for webp in THUMB_DIR.glob("*.webp"):
+        if webp.stem not in taken:
+            webp.unlink()
+            orphans += 1
 
     ordered = []
     for entry in entries:

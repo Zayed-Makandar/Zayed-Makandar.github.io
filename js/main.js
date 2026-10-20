@@ -15,7 +15,6 @@
 
   let content = {};
   let lenis = null;
-  let cursorEl = null;
 
   const $ = (sel, ctx = document) => ctx.querySelector(sel);
   const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
@@ -81,7 +80,7 @@
     initProjects();
     initCopy();
     initFooter();
-    if (photos.length) initGallery(photos);
+    if (photos.length) initGallery();
 
     if (motion) {
       gsap.registerPlugin(ScrollTrigger);
@@ -311,10 +310,8 @@
     const touch = matchMedia('(hover: none)').matches;
     slot('gallery-hint').textContent = (touch && content.gallery?.hintTouch) || content.gallery?.hint || '';
     slot('gallery').innerHTML = photos.map((photo, i) => `
-      <li>
-        <button class="gallery__btn" type="button" data-index="${i}" aria-label="${esc(photo.caption || `${ui('photo')} ${i + 1}`)}">
-          <img src="${PHOTO_DIR}/thumb/${esc(photo.id)}.webp" alt="" width="${photo.w}" height="${photo.h}" loading="lazy" decoding="async" draggable="false">
-        </button>
+      <li class="gallery__item">
+        <img src="${PHOTO_DIR}/thumb/${esc(photo.id)}.webp" alt="${esc(photo.caption || '')}" width="${photo.w}" height="${photo.h}" loading="lazy" decoding="async" draggable="false">
       </li>`).join('');
   }
 
@@ -520,18 +517,11 @@
   }
 
 
-  /* ---------------- Gallery: drag strip + lightbox ---------------- */
+  /* ---------------- Gallery: drag strip ---------------- */
 
-  function initGallery(photos) {
-    const scroller = $('.gallery');
-    const drag = enableDragScroll(scroller);
-    const lightbox = createLightbox(photos);
-
-    scroller.addEventListener('click', (e) => {
-      if (drag.consumeDrag()) return; // the mouse was dragging, not clicking
-      const button = e.target.closest('.gallery__btn');
-      if (button) lightbox.open(Number(button.dataset.index));
-    });
+  // The photos are only shown in the strip; they don't open anywhere.
+  function initGallery() {
+    enableDragScroll($('.gallery'));
   }
 
   // Mouse drag-to-scroll with a little momentum. Touch and trackpads scroll natively.
@@ -588,149 +578,6 @@
     el.addEventListener('pointerup', end);
     el.addEventListener('pointercancel', end);
     el.addEventListener('wheel', () => cancelAnimationFrame(frame), { passive: true });
-
-    return {
-      consumeDrag() {
-        const was = dragged;
-        dragged = false;
-        return was;
-      },
-    };
-  }
-
-  function createLightbox(photos) {
-    const dialog = $('.lightbox');
-    const img = $('.lightbox__img', dialog);
-    const stage = $('.lightbox__stage', dialog);
-    const caption = $('.lightbox__caption', dialog);
-    const count = $('.lightbox__count', dialog);
-    const prev = $('.lightbox__prev', dialog);
-    const next = $('.lightbox__next', dialog);
-    const close = $('.lightbox__close', dialog);
-    const loaded = new Map();
-    let index = 0;
-    let closing = false;
-
-    dialog.setAttribute('aria-label', content.gallery?.label || '');
-    close.setAttribute('aria-label', ui('close'));
-    prev.setAttribute('aria-label', ui('previous'));
-    next.setAttribute('aria-label', ui('next'));
-    prev.hidden = next.hidden = photos.length < 2;
-
-    const url = (photo, size) => `${PHOTO_DIR}/${size}/${photo.id}.webp`;
-    const wrap = (i) => (i + photos.length) % photos.length;
-
-    const preload = (i) => {
-      const src = url(photos[wrap(i)], 'full');
-      if (!loaded.has(src)) {
-        const im = new Image();
-        im.decoding = 'async';
-        im.src = src;
-        loaded.set(src, im);
-      }
-      return loaded.get(src);
-    };
-
-    function show(i, dir = 0) {
-      index = wrap(i);
-      const photo = photos[index];
-      const full = preload(index);
-      const ready = full.complete && full.naturalWidth > 0;
-
-      img.width = photo.w;
-      img.height = photo.h;
-      img.alt = photo.caption || '';
-      // Show the (already cached) thumbnail at once, swap in the sharp version when it lands.
-      img.src = ready ? full.src : url(photo, 'thumb');
-      if (!ready) {
-        const wanted = index;
-        full.addEventListener('load', () => { if (index === wanted) img.src = full.src; }, { once: true });
-      }
-
-      caption.textContent = photo.caption || '';
-      count.textContent = `${index + 1} / ${photos.length}`;
-
-      if (motion && dir) {
-        gsap.fromTo(img, { x: 48 * dir, opacity: 0 }, { x: 0, opacity: 1, duration: 0.6, ease: 'expo.out', overwrite: true });
-      }
-      if (photos.length > 1) {
-        preload(index + 1);
-        preload(index - 1);
-      }
-    }
-
-    function open(i) {
-      show(i);
-      dialog.showModal();
-      if (cursorEl) dialog.append(cursorEl);
-      lenis?.stop();
-      root.classList.add('is-locked');
-      if (motion) gsap.fromTo(dialog, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: 'power2.out' });
-    }
-
-    function shut() {
-      if (closing || !dialog.open) return;
-      if (!motion) {
-        dialog.close();
-        return;
-      }
-      closing = true;
-      gsap.to(dialog, { opacity: 0, duration: 0.3, ease: 'power2.in', onComplete: () => dialog.close() });
-    }
-
-    // Runs however the dialog closes (button, Esc, backdrop).
-    dialog.addEventListener('close', () => {
-      if (cursorEl) document.body.append(cursorEl);
-      closing = false;
-      lenis?.start();
-      root.classList.remove('is-locked');
-    });
-
-    prev.addEventListener('click', () => show(index - 1, -1));
-    next.addEventListener('click', () => show(index + 1, 1));
-    close.addEventListener('click', shut);
-
-    dialog.addEventListener('cancel', (e) => { // Esc
-      e.preventDefault();
-      shut();
-    });
-
-    dialog.addEventListener('keydown', (e) => {
-      if (photos.length < 2) return;
-      if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        show(index - 1, -1);
-      } else if (e.key === 'ArrowRight') {
-        e.preventDefault();
-        show(index + 1, 1);
-      }
-    });
-
-    // Clicking the dark area around the photo closes it.
-    dialog.addEventListener('click', (e) => {
-      if (e.target === dialog || e.target === stage) shut();
-    });
-
-    // Swipe left/right on touch screens.
-    let swipeX = null;
-    let swipeY = 0;
-    stage.addEventListener('pointerdown', (e) => {
-      if (e.pointerType === 'mouse') return;
-      swipeX = e.clientX;
-      swipeY = e.clientY;
-    });
-    stage.addEventListener('pointerup', (e) => {
-      if (swipeX === null) return;
-      const dx = e.clientX - swipeX;
-      const dy = e.clientY - swipeY;
-      swipeX = null;
-      if (photos.length > 1 && Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-        const dir = dx < 0 ? 1 : -1;
-        show(index + dir, dir);
-      }
-    });
-
-    return { open };
   }
 
 
@@ -814,7 +661,6 @@
     cursor.setAttribute('aria-hidden', 'true');
     cursor.innerHTML = `<div class="cursor__ring"><div class="cursor__shape"></div><span class="cursor__label"></span>${glove('cursor-glove', 'cursor__glove')}</div><div class="cursor__dot"></div>`;
     document.body.append(cursor);
-    cursorEl = cursor;
 
     const ring = $('.cursor__ring', cursor);
     const shape = $('.cursor__shape', cursor);
@@ -834,16 +680,11 @@
     // What the cursor should look like over a given element.
     const stateFor = (el) => {
       if (!el?.closest) return { mode: '' };
-      const tone = el.closest('.site-footer, .lightbox') ? 'dark' : el.closest('.marquee__row--roles') ? 'accent' : '';
+      const tone = el.closest('.site-footer') ? 'dark' : el.closest('.marquee__row--roles') ? 'accent' : '';
       if (el.closest('.sticker')) return { mode: 'glove', tone };
       const project = el.closest('.project__toggle');
       if (project) return { mode: 'label', tone, text: ui(project.getAttribute('aria-expanded') === 'true' ? 'cursorClose' : 'cursorOpen') };
-      const gallery = el.closest('.gallery');
-      if (gallery) {
-        const viewing = el.closest('.gallery__btn') && !gallery.classList.contains('is-dragging');
-        return { mode: 'label', tone, text: ui(viewing ? 'cursorView' : 'cursorDrag') };
-      }
-      if ((el.closest('.lightbox__stage') && !el.closest('img')) || el.matches('.lightbox')) return { mode: 'label', tone, text: ui('close') };
+      if (el.closest('.gallery')) return { mode: 'label', tone, text: ui('cursorDrag') };
       if (el.closest('a, button, [role="button"], label')) return { mode: 'hover', tone };
       return { mode: '', tone };
     };
@@ -868,7 +709,6 @@
       }
       cursor.classList.remove('is-hidden');
       dot.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-      if (cursor.classList.contains('is-down')) apply(e.target); // e.g. "View" becomes "Drag" mid-drag
     }, { passive: true });
 
     document.addEventListener('pointerover', (e) => apply(e.target));

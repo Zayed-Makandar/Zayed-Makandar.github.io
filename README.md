@@ -21,9 +21,9 @@ Open the folder in VS Code, right-click `index.html` → **Open with Live Server
 
 1. Drop images (JPG, PNG, WebP, HEIC…) into `photos/`.
 2. Run `python tools/optimize_photos.py` (needs `pip install Pillow`; add `pip install pillow-heif` for iPhone HEIC files).
-3. Write captions in `photos.json`. Reorder the entries to reorder the gallery.
+3. Write captions in `photos.json` (they become each photo's alt text). Reorder the entries to reorder the gallery.
 
-The script writes compressed WebP files to `assets/gallery/full/` (max 1600px wide) and `assets/gallery/thumb/` (800px tall). It strips EXIF data, including GPS location. Run it again any time you add or delete photos: it keeps your captions, skips photos it has already converted, and cleans up files for photos you removed. `--force` re-converts everything.
+The script writes compressed WebP files to `assets/gallery/thumb/` (800px tall). It strips EXIF data, including GPS location. Run it again any time you add or delete photos: it keeps your captions, skips photos it has already converted, and cleans up files for photos you removed. `--force` re-converts everything.
 
 The originals in `photos/` are git-ignored, so only the WebP versions are published.
 
@@ -34,7 +34,7 @@ index.html          page structure
 content.json        all the words
 photos.json         gallery captions (generated, then hand-edited)
 css/style.css       styles; palette at the top
-js/main.js          rendering, animation, gallery, lightbox
+js/main.js          rendering, animation, gallery
 tools/optimize_photos.py
 assets/             images (zayed.jpg, projects/, gallery/) and fonts/ (self-hosted, SIL OFL)
 resume.pdf

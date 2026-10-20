@@ -193,9 +193,7 @@ em { font-style: normal; color: var(--accent); }
 .contact__links,
 .footer__label,
 .footer__meta,
-.footer__bottom,
-.lightbox__count,
-.lightbox__caption {
+.footer__bottom {
   font-family: var(--font-mono);
   font-size: .75rem;
   font-weight: 400;
@@ -864,23 +862,19 @@ html.js:not(.is-rendered) .hero__tagline { visibility: hidden; }
   padding-inline: max(var(--gutter), calc((100% - var(--max)) / 2 + var(--gutter)));
 }
 
-.gallery__btn {
-  display: block;
-  padding: 0;
+.gallery__item {
   overflow: hidden;
-  border: 0;
   border-radius: 3px;
   background: var(--line);
-  cursor: inherit;
 }
-.gallery__btn img {
+.gallery__item img {
   width: auto;
   height: var(--thumb-h);
   transition: transform .9s var(--ease-out);
   -webkit-user-drag: none;
 }
 @media (hover: hover) {
-  .gallery__btn:hover img { transform: scale(1.05); }
+  .gallery__item:hover img { transform: scale(1.05); }
 }
 
 .gallery-empty {
@@ -890,94 +884,6 @@ html.js:not(.is-rendered) .hero__tagline { visibility: hidden; }
   font-family: var(--font-mono);
   font-size: .8rem;
 }
-
-
-/* ---------- Lightbox ---------- */
-
-.lightbox {
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  max-height: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  border: 0;
-  background: var(--ink);
-  color: var(--paper);
-}
-.lightbox { touch-action: pinch-zoom; overscroll-behavior: contain; }
-.lightbox[open] {
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
-}
-.lightbox::backdrop { background: transparent; }
-
-.lightbox__bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1rem var(--gutter);
-}
-.lightbox__count { opacity: .7; font-variant-numeric: tabular-nums; }
-
-.lightbox__stage {
-  display: grid;
-  place-items: center;
-  min-height: 0;
-  padding-inline: var(--gutter);
-  touch-action: pinch-zoom;
-}
-.lightbox__img {
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-.lightbox__caption {
-  flex: 1;
-  text-align: center;
-  text-transform: none;
-  letter-spacing: .02em;
-  font-size: .85rem;
-  line-height: 1.4;
-}
-
-.lightbox__btn {
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 3rem;
-  height: 3rem;
-  padding: 0;
-  border: 1px solid color-mix(in oklab, var(--paper) 30%, transparent);
-  border-radius: 50%;
-  background: none;
-  color: var(--paper);
-  cursor: pointer;
-  transition: background-color .3s, border-color .3s, color .3s;
-}
-.lightbox__btn svg {
-  width: 1.2rem;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-@media (hover: hover) {
-  .lightbox__btn:hover {
-    border-color: var(--accent);
-    background: var(--accent);
-    color: var(--ink);
-  }
-}
-.lightbox__btn[hidden] { visibility: hidden; display: grid; }
 
 
 /* ---------- Contact ---------- */
@@ -1322,7 +1228,7 @@ html:not(.has-cursor) .cursor { display: none; }
   background: color-mix(in oklab, var(--accent) 14%, transparent);
 }
 
-/* Projects, gallery, lightbox: a solid bubble with a label ("Open", "View", "Drag"...). */
+/* Projects and gallery: a solid bubble with a label ("Open", "Close", "Drag"). */
 .cursor[data-mode="label"] .cursor__shape {
   top: -44px;
   left: -44px;
@@ -1358,7 +1264,7 @@ html:not(.has-cursor) .cursor { display: none; }
 .cursor.is-down .cursor__shape { scale: .85; }
 .cursor.is-down .cursor__glove { scale: .85; }
 
-/* Over the always-dark footer and lightbox: light colours. Over the vermilion strip: dark dot. */
+/* Over the always-dark footer: light colours. Over the vermilion strip: dark dot. */
 .cursor[data-tone="dark"] {
   --fg: var(--paper);
   --bg: var(--ink);
@@ -1422,8 +1328,6 @@ html.lenis, html.lenis body { height: auto; }
 .lenis [data-lenis-prevent],
 .lenis [data-lenis-prevent-horizontal] { overscroll-behavior: contain; }
 .lenis.lenis-smooth iframe { pointer-events: none; }
-
-html.is-locked { overflow: hidden; }
 
 
 /* ---------- Reduced motion ---------- */

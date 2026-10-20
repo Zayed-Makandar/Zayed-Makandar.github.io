@@ -212,17 +212,12 @@
 
   "ui": {
     "at": "at",
-    "photo": "Photo",
     "email": "Email",
     "copy": "Copy",
     "copied": "Copied",
     "backToTop": "Back to top ↑",
     "themeToDark": "Switch to dark mode",
     "themeToLight": "Switch to light mode",
-    "close": "Close",
-    "previous": "Previous photo",
-    "next": "Next photo",
-    "cursorView": "View",
     "cursorDrag": "Drag",
     "cursorOpen": "Open",
     "cursorClose": "Close"
