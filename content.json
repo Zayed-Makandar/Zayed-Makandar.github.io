@@ -54,7 +54,7 @@
       },
       {
         "title": "Generative AI & LLMs",
-        "items": ["LLMs", "Retrieval-Augmented Generation (RAG)", "Prompt Engineering", "Embeddings", "Vector DBs (ChromaDB, FAISS)", "Hugging Face", "VLMs", "Fine-Tuning (LoRA / QLoRA)"]
+        "items": ["LLMs", "Retrieval-Augmented Generation (RAG)", "Prompt Engineering", "Embeddings", "Vector DBs (ChromaDB, FAISS)", "Hugging Face", "VLMs", "Fine-Tuning (LoRA / QLoRA)", "Open WebUI"]
       },
       {
         "title": "Agentic AI",
@@ -81,20 +81,31 @@
 
   "projects": {
     "label": "Projects",
+    "earlierLabel": "Earlier projects",
+    "_note": "Items with \"earlier\": true are shown smaller, under the earlierLabel heading.",
     "items": [
       {
         "title": "DocIntel",
         "line": "Turns PDFs, scans and Office files into clean Markdown, in 90+ languages.",
-        "description": "A GPU microservice built around a 5B vision-language OCR model, with a switchable Transformers/vLLM backend. Tuning batching, prefix caching and shared-GPU memory took a 10-page document from 95 s to 13.3 s.",
+        "description": "A GPU microservice built around a 5B vision-language OCR model, with a switchable Transformers/vLLM backend, serving a multi-agent learning platform. Tuning batching, prefix caching and shared-GPU memory took a 10-page document from 95 s to 13.3 s.",
         "tags": ["FastAPI", "vLLM", "Transformers", "Docker"],
         "image": "assets/projects/docintel.svg",
         "imageAlt": "Illustration of a document page being converted into structured Markdown",
         "links": [{ "label": "GitHub", "url": "https://github.com/Zayed-Makandar/DocIntel" }]
       },
       {
+        "title": "QuoteVision",
+        "line": "Reads scanned vendor quotations and turns them into validated purchase-order data, on a CPU-only server.",
+        "description": "A self-hosted 1B vision-language OCR model turns each page into Markdown tables, then deterministic code extracts and cross-checks the line items. Quantisation, NUMA pinning and image-token capping made it 3.47× faster, with 67% fewer visual tokens per page.",
+        "tags": ["llama.cpp", "OpenVINO", "Vision-LLM", "FastAPI"],
+        "image": "assets/projects/quotevision.svg",
+        "imageAlt": "Illustration of a quotation document being turned into a validated table",
+        "links": [{ "label": "GitHub", "url": "https://github.com/Zayed-Makandar/QuoteVision" }]
+      },
+      {
         "title": "Edge-AI Health Monitor",
         "line": "Offline health screening with sensors, a webcam and ten INT8 models on a CPU.",
-        "description": "A multi-pathway PyTorch model (1D-CNN, wavelet 2D-CNN, LSTM, self-attention) feeds five risk modules, all quantised to INT8 ONNX so they run offline. A webcam module reads contactless heart rate (rPPG), blink rate and stress alongside IoT vital-sign sensors.",
+        "description": "A multi-pathway PyTorch model (1D-CNN, wavelet 2D-CNN, LSTM, self-attention) feeds five risk modules, all quantised to INT8 ONNX: 601 KB in total and 0.71 ms per screening on a laptop CPU. A webcam module reads contactless heart rate (rPPG), blink rate and stress alongside IoT vital-sign sensors.",
         "tags": ["PyTorch", "ONNX Runtime", "OpenCV", "MediaPipe"],
         "image": "assets/projects/health-monitor.svg",
         "imageAlt": "Illustration of an ECG trace on a grid",
@@ -108,6 +119,63 @@
         "image": "assets/projects/voicedesk.svg",
         "imageAlt": "Illustration of an audio waveform next to a speech bubble",
         "links": [{ "label": "GitHub", "url": "https://github.com/Zayed-Makandar/VoiceDesk" }]
+      },
+      {
+        "title": "AIOS",
+        "line": "A voice agent that qualifies sales leads in 11 Indian languages.",
+        "description": "A real-time Pipecat pipeline with noise suppression, smart turn detection and code-mixed speech recognition. It opens in Kannada, follows the caller into their language, and turns every call into structured lead data.",
+        "tags": ["Pipecat", "WebRTC", "LLMs", "FastAPI"],
+        "image": "assets/projects/aios.svg",
+        "imageAlt": "Illustration of a phone call turning into a structured lead record",
+        "links": [{ "label": "GitHub", "url": "https://github.com/Zayed-Makandar/AIOS-Voice-Agent" }]
+      },
+      {
+        "title": "VoxServe",
+        "line": "Self-hosted speech-to-text, LLM chat and text-to-speech behind one API for AR/VR institutes.",
+        "description": "A multi-tenant FastAPI platform with role-based portals, per-key analytics and a Unity C# SDK. GPU work is queued, and every model falls back to the CPU automatically when the GPU runtime is missing.",
+        "tags": ["FastAPI", "faster-whisper", "Transformers", "PostgreSQL"],
+        "image": "assets/projects/voxserve.svg",
+        "imageAlt": "Illustration of speech, text and audio flowing through one API",
+        "links": [{ "label": "GitHub", "url": "https://github.com/Zayed-Makandar/VoxServe" }]
+      },
+      {
+        "title": "AIURVA",
+        "line": "Concept for a multilingual AI health-intake kiosk.",
+        "description": "Patients answer an adaptive interview in English, Hindi or Kannada. Speech is routed to Whisper or a Triton-served regional model, and a pre-consultation summary moves through doctor and lab review on one record.",
+        "tags": ["Whisper", "Triton", "FastAPI", "React"],
+        "image": "assets/projects/aiurva.svg",
+        "imageAlt": "Illustration of a kiosk interview in three languages",
+        "links": [{ "label": "GitHub", "url": "https://github.com/Zayed-Makandar/AIURVA" }]
+      },
+      {
+        "title": "Assist",
+        "earlier": true,
+        "line": "A voice-activated AI desktop assistant for Windows.",
+        "description": "Wake word, speech recognition and GPT-4o, plus desktop actions: open apps, play Spotify or YouTube, check the weather and news. Built in May–June 2025 with PyQt.",
+        "tags": ["Python", "PyQt", "OpenAI", "Speech Recognition"],
+        "image": "assets/projects/assist.svg",
+        "imageAlt": "Illustration of a chat window with a microphone",
+        "links": [{ "label": "GitHub", "url": "https://github.com/Zayed-Makandar/Assist-AI-Desktop-Assistant" }]
+      },
+      {
+        "title": "MusicalWorld",
+        "earlier": true,
+        "line": "A music sharing site for independent singers.",
+        "description": "Accounts with email verification, songs by language, user uploads, favourites and an admin panel, built with PHP and MySQL. Completed March 2024.",
+        "tags": ["PHP", "MySQL", "JavaScript", "Bootstrap"],
+        "image": "assets/projects/musicalworld.svg",
+        "imageAlt": "Illustration of a music player with an upload button",
+        "links": [{ "label": "GitHub", "url": "https://github.com/Zayed-Makandar/MusicalWorld-Music-Sharing-Site" }]
+      },
+      {
+        "title": "Tetris",
+        "earlier": true,
+        "line": "Classic Tetris in Python and pygame.",
+        "description": "A Computer Graphics course team project with three difficulty levels, a saved high score and animated menu screens. Completed July 2024.",
+        "tags": ["Python", "pygame", "Game", "Computer Graphics"],
+        "image": "assets/projects/tetris.svg",
+        "imageAlt": "Illustration of falling tetromino blocks",
+        "links": [{ "label": "GitHub", "url": "https://github.com/Zayed-Makandar/Tetris" }]
       }
     ]
   },

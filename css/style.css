@@ -675,6 +675,23 @@ html.js:not(.is-rendered) .hero__tagline { visibility: hidden; }
 .project { border-bottom: 1px solid var(--line); }
 .project h3 { font: inherit; }
 
+/* "Earlier projects": a small heading, then the same rows at a smaller size. */
+.projects__group {
+  padding: clamp(2.5rem, 5vw, 4rem) 0 .9rem;
+  border-bottom: 1px solid var(--line);
+}
+.projects__group-label {
+  font-family: var(--font-mono);
+  font-size: .75rem;
+  font-weight: 400;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.project--earlier .project__toggle { padding-block: clamp(1rem, 1.8vw, 1.4rem); }
+.project--earlier .project__title { font-size: clamp(1.35rem, 2.6vw, 2.1rem); }
+.project--earlier .project__icon { width: clamp(2rem, 2.8vw, 2.4rem); }
+
 .project__toggle {
   --fill-pad: min(1.25rem, var(--gutter));
   position: relative;

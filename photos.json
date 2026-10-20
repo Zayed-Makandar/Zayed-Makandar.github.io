@@ -1,4 +1,152 @@
 {
   "_note": "Edit 'caption' for each photo and reorder entries to reorder the gallery. Run  python tools/optimize_photos.py  after adding or removing files in ./photos. id, w and h are filled in by the script.",
-  "photos": []
+  "photos": [
+    {
+      "file": "03-kiosk.jpg",
+      "caption": "",
+      "id": "03-kiosk",
+      "w": 1400,
+      "h": 880
+    },
+    {
+      "file": "04-live-screening.jpg",
+      "caption": "",
+      "id": "04-live-screening",
+      "w": 1600,
+      "h": 731
+    },
+    {
+      "file": "IMG_20261020_172250.jpg",
+      "caption": "",
+      "id": "img-20261020-172250",
+      "w": 1600,
+      "h": 1200
+    },
+    {
+      "file": "IMG_20260905_181535.jpg",
+      "caption": "",
+      "id": "img-20260905-181535",
+      "w": 1600,
+      "h": 2133
+    },
+    {
+      "file": "IMG_20260831_125459.jpg",
+      "caption": "",
+      "id": "img-20260831-125459",
+      "w": 1600,
+      "h": 2133
+    },
+    {
+      "file": "IMG_20260831_125738.jpg",
+      "caption": "",
+      "id": "img-20260831-125738",
+      "w": 1600,
+      "h": 2133
+    },
+    {
+      "file": "IMG-20260730-WA0019.jpeg",
+      "caption": "",
+      "id": "img-20260730-wa0019",
+      "w": 1600,
+      "h": 900
+    },
+    {
+      "file": "IMG_20260714_173050.jpg",
+      "caption": "",
+      "id": "img-20260714-173050",
+      "w": 1600,
+      "h": 2133
+    },
+    {
+      "file": "chatgpt-1782816376973.jpg",
+      "caption": "",
+      "id": "chatgpt-1782816376973",
+      "w": 1600,
+      "h": 2133
+    },
+    {
+      "file": "IMG_20260622_153820.jpg",
+      "caption": "",
+      "id": "img-20260622-153820",
+      "w": 1600,
+      "h": 2133
+    },
+    {
+      "file": "IMG_20260622_153842.jpg",
+      "caption": "",
+      "id": "img-20260622-153842",
+      "w": 1600,
+      "h": 1200
+    },
+    {
+      "file": "IMG-20260620-WA0000.jpeg",
+      "caption": "",
+      "id": "img-20260620-wa0000",
+      "w": 1600,
+      "h": 2844
+    },
+    {
+      "file": "IMG_20260604_160553.jpg",
+      "caption": "",
+      "id": "img-20260604-160553",
+      "w": 1600,
+      "h": 1200
+    },
+    {
+      "file": "IMG-20260526-WA0001.jpg",
+      "caption": "",
+      "id": "img-20260526-wa0001",
+      "w": 1280,
+      "h": 960
+    },
+    {
+      "file": "IMG-20260410-WA0004.jpg",
+      "caption": "",
+      "id": "img-20260410-wa0004",
+      "w": 1280,
+      "h": 960
+    },
+    {
+      "file": "IMG-20260121-WA0019.jpg",
+      "caption": "",
+      "id": "img-20260121-wa0019",
+      "w": 1600,
+      "h": 720
+    },
+    {
+      "file": "IMG-20260121-WA0021.jpg",
+      "caption": "",
+      "id": "img-20260121-wa0021",
+      "w": 1600,
+      "h": 3556
+    },
+    {
+      "file": "IMG-20260121-WA0031.jpg",
+      "caption": "",
+      "id": "img-20260121-wa0031",
+      "w": 1600,
+      "h": 3556
+    },
+    {
+      "file": "IMG-20260119-WA0063.jpg",
+      "caption": "",
+      "id": "img-20260119-wa0063",
+      "w": 1600,
+      "h": 3556
+    },
+    {
+      "file": "IMG-20260113-WA0008.jpeg",
+      "caption": "",
+      "id": "img-20260113-wa0008",
+      "w": 1600,
+      "h": 2844
+    },
+    {
+      "file": "IMG_20251115_205811.jpg",
+      "caption": "",
+      "id": "img-20251115-205811",
+      "w": 1600,
+      "h": 1200
+    }
+  ]
 }

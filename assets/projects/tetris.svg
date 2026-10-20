@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000">
+  <rect width="1600" height="1000" fill="#E8461E"/>
+  <!-- the well: 8 columns x 13 rows of 56px cells, starting at (440, 136) -->
+  <rect x="428" y="124" width="472" height="752" rx="8" fill="#151412" opacity=".12"/>
+  <path d="M428 124v752h472V124" fill="none" stroke="#151412" stroke-width="12" stroke-linejoin="round"/>
+  <!-- settled blocks -->
+  <g stroke="#151412" stroke-width="6">
+    <!-- bottom row (gap in column 6) -->
+    <g fill="#151412">
+      <rect x="442" y="810" width="52" height="52" rx="6"/><rect x="498" y="810" width="52" height="52" rx="6"/>
+      <rect x="554" y="810" width="52" height="52" rx="6"/>
+    </g>
+    <g fill="#F3EFE6">
+      <rect x="610" y="810" width="52" height="52" rx="6"/><rect x="666" y="810" width="52" height="52" rx="6"/>
+      <rect x="722" y="810" width="52" height="52" rx="6"/><rect x="834" y="810" width="52" height="52" rx="6"/>
+    </g>
+    <!-- second row (gap in column 2) -->
+    <g fill="#F3EFE6">
+      <rect x="442" y="754" width="52" height="52" rx="6"/><rect x="498" y="754" width="52" height="52" rx="6"/>
+    </g>
+    <g fill="#151412">
+      <rect x="610" y="754" width="52" height="52" rx="6"/><rect x="666" y="754" width="52" height="52" rx="6"/>
+      <rect x="722" y="754" width="52" height="52" rx="6"/>
+    </g>
+    <g fill="#F3EFE6">
+      <rect x="778" y="754" width="52" height="52" rx="6"/><rect x="834" y="754" width="52" height="52" rx="6"/>
+    </g>
+    <!-- third row -->
+    <rect x="442" y="698" width="52" height="52" rx="6" fill="#151412"/>
+    <rect x="666" y="698" width="52" height="52" rx="6" fill="#F3EFE6"/>
+    <rect x="834" y="698" width="52" height="52" rx="6" fill="#151412"/>
+    <rect x="834" y="642" width="52" height="52" rx="6" fill="#151412"/>
+  </g>
+  <!-- falling T piece with motion lines -->
+  <g fill="none" stroke="#151412" stroke-width="8" stroke-linecap="round" opacity=".55">
+    <path d="M582 210v60M638 180v90M694 210v60"/>
+  </g>
+  <g stroke="#151412" stroke-width="6" fill="#F3EFE6">
+    <rect x="554" y="306" width="52" height="52" rx="6"/><rect x="610" y="306" width="52" height="52" rx="6"/>
+    <rect x="666" y="306" width="52" height="52" rx="6"/><rect x="610" y="362" width="52" height="52" rx="6"/>
+  </g>
+  <!-- next piece -->
+  <g transform="translate(980 136)">
+    <rect width="240" height="240" rx="18" fill="#151412"/>
+    <g fill="#E8461E" stroke="#F3EFE6" stroke-width="5">
+      <rect x="66" y="56" width="48" height="48" rx="6"/><rect x="66" y="108" width="48" height="48" rx="6"/>
+      <rect x="66" y="160" width="48" height="48" rx="6"/><rect x="118" y="160" width="48" height="48" rx="6"/>
+    </g>
+  </g>
+  <!-- score and level -->
+  <g transform="translate(980 420)">
+    <rect width="240" height="130" rx="18" fill="#F3EFE6" stroke="#151412" stroke-width="8"/>
+    <rect x="30" y="34" width="90" height="12" rx="6" fill="#151412" opacity=".6"/>
+    <rect x="30" y="64" width="160" height="28" rx="4" fill="#151412"/>
+  </g>
+  <g transform="translate(980 590)" fill="#151412">
+    <circle cx="24" cy="24" r="16"/><circle cx="74" cy="24" r="16"/><circle cx="124" cy="24" r="16" opacity=".25"/>
+  </g>
+</svg>

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000">
+  <rect width="1600" height="1000" fill="#E8461E"/>
+  <!-- desktop chat window -->
+  <g transform="translate(220 170)">
+    <rect width="760" height="620" rx="20" fill="#F3EFE6" stroke="#151412" stroke-width="8"/>
+    <path d="M0 70h760" stroke="#151412" stroke-width="8"/>
+    <g fill="#151412"><circle cx="40" cy="36" r="10"/><circle cx="72" cy="36" r="10"/><circle cx="104" cy="36" r="10"/></g>
+    <rect x="300" y="28" width="160" height="14" rx="7" fill="#151412" opacity=".6"/>
+    <!-- assistant bubble -->
+    <path d="M60 120h330a20 20 0 0 1 20 20v76a20 20 0 0 1-20 20H90l-30 26z" fill="#151412"/>
+    <rect x="96" y="150" width="240" height="14" rx="7" fill="#F3EFE6" opacity=".85"/>
+    <rect x="96" y="182" width="180" height="14" rx="7" fill="#F3EFE6" opacity=".55"/>
+    <!-- user bubble -->
+    <path d="M700 300H400a20 20 0 0 0-20 20v56a20 20 0 0 0 20 20h270l30 26z" fill="#E8461E" stroke="#151412" stroke-width="6"/>
+    <rect x="414" y="330" width="220" height="14" rx="7" fill="#151412"/>
+    <rect x="414" y="360" width="140" height="14" rx="7" fill="#151412" opacity=".6"/>
+    <!-- assistant replies with an action -->
+    <path d="M60 460h360a20 20 0 0 1 20 20v56a20 20 0 0 1-20 20H90l-30 26z" fill="#151412"/>
+    <circle cx="112" cy="508" r="22" fill="#E8461E"/>
+    <path d="M104 496v24l20-12z" fill="#151412"/>
+    <rect x="150" y="500" width="220" height="14" rx="7" fill="#F3EFE6" opacity=".85"/>
+  </g>
+  <!-- microphone -->
+  <g transform="translate(1090 230)">
+    <rect x="70" y="0" width="150" height="280" rx="75" fill="#151412"/>
+    <g stroke="#F3EFE6" stroke-width="6" stroke-linecap="round" opacity=".4">
+      <path d="M110 70h70M110 110h70M110 150h70M110 190h70"/>
+    </g>
+    <g fill="none" stroke="#151412" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M30 180c0 90 50 150 115 150s115-60 115-150"/>
+      <path d="M145 330v120M75 456h140"/>
+    </g>
+    <g fill="none" stroke="#151412" stroke-width="10" stroke-linecap="round">
+      <path d="M290 80a90 90 0 0 1 0 120"/>
+      <path d="M320 50a130 130 0 0 1 0 180"/>
+    </g>
+  </g>
+</svg>

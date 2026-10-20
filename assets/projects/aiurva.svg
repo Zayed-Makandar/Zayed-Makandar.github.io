@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" width="1600" height="1000">
+  <rect width="1600" height="1000" fill="#E8461E"/>
+  <!-- health-intake kiosk -->
+  <g stroke="#151412" stroke-width="8" stroke-linejoin="round">
+    <rect x="260" y="150" width="460" height="340" rx="26" fill="#151412"/>
+    <rect x="288" y="178" width="404" height="284" rx="10" fill="#F3EFE6"/>
+    <rect x="460" y="490" width="60" height="300" fill="#151412"/>
+    <rect x="330" y="790" width="320" height="44" rx="22" fill="#151412"/>
+  </g>
+  <!-- on screen: a question and an answer being spoken -->
+  <g fill="#151412">
+    <rect x="322" y="214" width="220" height="22" rx="4"/>
+    <rect x="322" y="250" width="300" height="12" rx="6" opacity=".7"/>
+    <rect x="322" y="274" width="250" height="12" rx="6" opacity=".7"/>
+  </g>
+  <rect x="322" y="318" width="96" height="40" rx="20" fill="#E8461E" stroke="#151412" stroke-width="5"/>
+  <rect x="430" y="318" width="96" height="40" rx="20" fill="none" stroke="#151412" stroke-width="5"/>
+  <rect x="538" y="318" width="96" height="40" rx="20" fill="none" stroke="#151412" stroke-width="5"/>
+  <g fill="#151412">
+    <rect x="336" y="398" width="12" height="28" rx="6"/><rect x="356" y="388" width="12" height="48" rx="6"/>
+    <rect x="376" y="380" width="12" height="64" rx="6"/><rect x="396" y="392" width="12" height="40" rx="6"/>
+    <rect x="416" y="384" width="12" height="56" rx="6"/><rect x="436" y="398" width="12" height="28" rx="6"/>
+  </g>
+  <!-- the same answer in three scripts: Latin, Devanagari, Kannada -->
+  <g stroke="#151412" stroke-width="8" stroke-linejoin="round" fill="#F3EFE6">
+    <path d="M880 170h420a24 24 0 0 1 24 24v110a24 24 0 0 1-24 24H930l-50 40v-40a24 24 0 0 1-24-24V194a24 24 0 0 1 24-24z"/>
+    <path d="M880 420h420a24 24 0 0 1 24 24v110a24 24 0 0 1-24 24H930l-50 40v-40a24 24 0 0 1-24-24V444a24 24 0 0 1 24-24z"/>
+    <path d="M880 670h420a24 24 0 0 1 24 24v110a24 24 0 0 1-24 24H930l-50 40v-40a24 24 0 0 1-24-24V694a24 24 0 0 1 24-24z"/>
+  </g>
+  <g fill="#151412" opacity=".8">
+    <rect x="900" y="218" width="110" height="14" rx="7"/><rect x="1024" y="218" width="70" height="14" rx="7"/><rect x="1108" y="218" width="140" height="14" rx="7"/>
+    <rect x="900" y="262" width="160" height="14" rx="7"/><rect x="1074" y="262" width="90" height="14" rx="7"/>
+  </g>
+  <g fill="none" stroke="#151412" stroke-width="7" stroke-linecap="round" opacity=".8">
+    <path d="M900 470h170M1090 470h150"/>
+    <path d="M920 470v30M950 470v26M985 470v34M1020 470v24M1050 470v30M1110 470v28M1145 470v32M1180 470v24M1215 470v30"/>
+    <path d="M900 520h120M1040 520h110"/>
+    <path d="M915 520v22M960 520v28M1000 520v22M1060 520v26M1100 520v22M1135 520v28"/>
+  </g>
+  <g fill="none" stroke="#151412" stroke-width="7" stroke-linecap="round" opacity=".8">
+    <path d="M905 740a14 14 0 1 1 28 0c0 12-14 14-14 26M950 732a14 14 0 1 0 28 0v28M1000 740a14 14 0 1 1 28 0 14 14 0 1 1-28 0M1046 730c18 0 18 28 0 28M1076 740a14 14 0 1 1 28 0c0 12-14 14-14 26M1122 732a14 14 0 1 0 28 0v28M1172 740a14 14 0 1 1 28 0 14 14 0 1 1-28 0M1218 730c18 0 18 28 0 28"/>
+    <path d="M905 790a14 14 0 1 1 28 0M952 782c18 0 18 28 0 28M988 790a14 14 0 1 1 28 0c0 10-12 14-12 22M1036 782a14 14 0 1 0 28 0v24M1082 790a14 14 0 1 1 28 0"/>
+  </g>
+</svg>

@@ -160,7 +160,15 @@
         <ul class="skill-group__items">${(group.items || []).map((s) => `<li>${esc(s)}</li>`).join('')}</ul>
       </li>`).join('');
 
-    slot('projects').innerHTML = (content.projects?.items || []).map(renderProject).join('');
+    // Featured projects first, then the "earlier" ones under their own smaller heading.
+    const projects = content.projects?.items || [];
+    const featured = projects.filter((p) => !p.earlier);
+    const earlier = projects.filter((p) => p.earlier);
+    slot('projects').innerHTML = featured.map((p, i) => renderProject(p, i)).join('')
+      + (earlier.length
+        ? `<li class="projects__group" data-reveal="fade"><h3 class="projects__group-label">${esc(content.projects.earlierLabel || '')}</h3></li>`
+          + earlier.map((p, i) => renderProject(p, featured.length + i)).join('')
+        : '');
 
     renderGallery(photos);
 
@@ -261,7 +269,7 @@
       : '';
 
     return `
-      <li class="project" data-reveal="fade">
+      <li class="project${project.earlier ? ' project--earlier' : ''}" data-reveal="fade">
         <h3>
           <button class="project__toggle" type="button" aria-expanded="false" aria-controls="${id}">
             <span class="project__title">${esc(project.title)}</span>
